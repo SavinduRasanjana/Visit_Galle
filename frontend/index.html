@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visit Galle – Your Gateway to Sri Lanka's Historic South</title>
+  <meta name="description" content="Plan your perfect trip to Galle, Sri Lanka. Explore attractions, transport routes, and a curated one-day itinerary.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── HOME-ONLY: HERO ── */
+    body { padding-top: 0; }
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg,#0d2e24 0%,#1a4a3a 40%,#2d6b55 70%,#c8873a 160%);
+    }
+    .hero-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 28% 62%, rgba(200,135,58,.2) 0%, transparent 50%),
+        radial-gradient(circle at 78% 28%, rgba(255,255,255,.04) 0%, transparent 40%);
+    }
+    .hero-silhouette {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 220px; opacity: .18; pointer-events: none;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: var(--max-w); margin: 0 auto;
+      padding: 0 24px 80px; width: 100%;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: .76rem; font-weight: 700;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--clr-accent-lt); margin-bottom: 16px;
+    }
+    .hero-eyebrow::before { content:''; width:28px; height:2px; background:var(--clr-accent); }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6.5vw, 5rem);
+      font-weight: 700; color: var(--clr-white); line-height: 1.08;
+      max-width: 720px; margin-bottom: 22px;
+    }
+    .hero h1 em { font-style: normal; color: var(--clr-accent-lt); }
+    .hero-desc {
+      font-size: 1.08rem; color: rgba(255,255,255,.75);
+      max-width: 500px; line-height: 1.72; margin-bottom: 34px;
+    }
+    .hero-stats {
+      position: absolute; right: 24px; bottom: 80px; z-index: 2;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .scroll-wrap { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 2; }
+
+    /* ── HOME-ONLY: ABOUT BAND ── */
+    .about-band { background: var(--clr-white); border-bottom: 1px solid var(--clr-border); }
+
+    /* ── HOME-ONLY: DARK TRANSPORT BAND ── */
+    .transport-band { background: var(--clr-primary); }
+    .transport-inner { max-width: var(--max-w); margin: 0 auto; padding: 60px 24px; }
+    .transport-header { text-align: center; margin-bottom: 44px; }
+    .transport-header h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--clr-white); margin-bottom: 12px; }
+    .transport-header p { color: rgba(255,255,255,.62); font-size: .95rem; max-width: 520px; margin: 0 auto; }
+    .disclaimer-note { text-align: center; margin-top: 22px; font-size: .75rem; color: rgba(255,255,255,.3); }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="site-logo">
+      <span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span>
+    </a>
+    <nav class="site-nav" id="site-nav">
+      <a href="index.html" class="active">Home</a>
+      <a href="attractions.html">Attractions</a>
+      <a href="navigation.html">Getting Here</a>
+      <a href="itinerary.html">Itinerary</a>
+      <a href="feedback.html" class="nav-cta">Feedback</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <svg class="hero-silhouette" viewBox="0 0 1200 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,220 L0,160 L30,160 L30,140 L50,140 L50,120 L70,120 L70,110 L90,110 L90,130 L110,130 L110,150 L140,150 L140,100 L160,100 L160,85 L180,85 L180,65 L200,65 L200,85 L220,85 L220,100 L260,100 L260,90 L280,90 L280,70 L300,70 L300,50 L320,50 L320,70 L340,70 L340,90 L380,90 L380,110 L400,110 L400,90 L420,90 L420,80 L460,80 L460,100 L480,100 L480,120 L500,120 L500,130 L530,130 L530,110 L560,110 L560,95 L580,95 L580,75 L600,75 L600,60 L620,60 L620,45 L640,45 L640,60 L660,60 L660,75 L680,75 L680,95 L700,95 L700,110 L730,110 L730,130 L760,130 L760,120 L780,120 L780,100 L800,100 L800,90 L830,90 L830,110 L860,110 L860,130 L900,130 L900,100 L920,100 L920,80 L940,80 L940,65 L960,65 L960,80 L980,80 L980,100 L1010,100 L1010,130 L1040,130 L1040,140 L1060,140 L1060,155 L1090,155 L1090,140 L1110,140 L1110,160 L1140,160 L1140,150 L1160,150 L1160,170 L1200,170 L1200,220 Z" fill="white"/>
+    <rect x="598" y="18" width="20" height="42" fill="white"/>
+    <polygon points="588,18 618,18 612,4 604,4" fill="white"/>
+  </svg>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Sri Lanka · Southern Province</div>
+    <h1>Discover the <em>Wonders</em><br>of Historic Galle</h1>
+    <p class="hero-desc">From Colombo, embark on a memorable journey to Galle — a UNESCO World Heritage city where Dutch colonial heritage meets the pristine Indian Ocean coastline.</p>
+    <div class="page-hero-actions">
+      <a href="attractions.html" class="btn btn-primary">Explore Attractions</a>
+      <a href="navigation.html" class="btn btn-outline-white">Plan Your Journey</a>
+    </div>
+    <div class="stat-chips" style="margin-top:32px;">
+      <div class="stat-chip"><strong>25+</strong><span>Attractions</span></div>
+      <div class="stat-chip"><strong>UNESCO</strong><span>Heritage Site</span></div>
+      <div class="stat-chip"><strong>~2.5h</strong><span>From Colombo</span></div>
+      <div class="stat-chip"><strong>25 km</strong><span>Radius Coverage</span></div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <!-- hidden on mobile via CSS -->
+  </div>
+  <div class="scroll-wrap"><div class="scroll-hint">Scroll</div></div>
+</section>
+
+<!-- QUICK BAR -->
+<div class="quick-bar">
+  <div class="quick-bar-inner">
+    <a class="quick-link" href="attractions.html">
+      <div class="ql-icon">🏰</div>
+      <div class="ql-text"><strong>Attractions</strong><span>10+ curated spots</span></div>
+    </a>
+    <a class="quick-link" href="navigation.html">
+      <div class="ql-icon">🗺️</div>
+      <div class="ql-text"><strong>Map & Route</strong><span>Colombo → Galle</span></div>
+    </a>
+    <a class="quick-link" href="itinerary.html">
+      <div class="ql-icon">📅</div>
+      <div class="ql-text"><strong>One-Day Plan</strong><span>Curated itinerary</span></div>
+    </a>
+    <a class="quick-link" href="feedback.html">
+      <div class="ql-icon">💬</div>
+      <div class="ql-text"><strong>Feedback</strong><span>Share your experience</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about-band">
+  <div class="page-wrap">
+    <div class="section">
+      <div class="about-grid">
+        <div class="about-img-wrap fade-in">
+          <div class="about-img-placeholder bg-fort" data-icon="🏰"></div>
+          <div class="about-badge"><strong>1663</strong>Dutch Fort<br>Established</div>
+        </div>
+        <div class="fade-in">
+          <div class="eyebrow">About Galle</div>
+          <h2 class="section-title">A City Where History<br>Meets the Indian Ocean</h2>
+          <div class="divider" style="margin-bottom:20px;"></div>
+          <p style="color:var(--clr-muted);line-height:1.75;margin-bottom:14px;font-size:.97rem;">Galle is one of Sri Lanka's most captivating destinations — a southern coastal city where centuries of colonial history blend effortlessly with the natural beauty of tropical shorelines. Declared a UNESCO World Heritage Site, the Galle Fort remains one of the best-preserved examples of European architecture in South and Southeast Asia.</p>
+          <p style="color:var(--clr-muted);line-height:1.75;font-size:.97rem;">Located approximately 115 km south of Colombo, Galle is easily reached by train or bus. Within a 25 km radius lie beaches, temples, nature reserves, and authentic local dining experiences.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;">
+            <span class="tag">UNESCO World Heritage</span>
+            <span class="tag">Dutch Colonial History</span>
+            <span class="tag">Indian Ocean Beaches</span>
+            <span class="tag">Local Cuisine</span>
+            <span class="tag">Wildlife</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOP ATTRACTIONS PREVIEW -->
+<section class="section">
+  <div class="page-wrap">
+    <div class="section-meta">
+      <div class="section-header">
+        <div class="eyebrow">Top Destinations</div>
+        <h2 class="section-title">Must-See <span>Galle Attractions</span></h2>
+        <div class="divider"></div>
+      </div>
+      <a href="attractions.html" class="view-all">View all attractions →</a>
+    </div>
+    <div class="spot-grid">
+      <article class="spot-card fade-in">
+        <div class="spot-img"><div class="spot-img-inner bg-fort"><div class="spot-icon">🏰</div></div><div class="spot-rank">1</div><div class="spot-cat-label cat-historical">Historical</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Galle Dutch Fort</h3>
+          <p class="spot-desc">A UNESCO World Heritage Site, this 17th-century Dutch fortification encloses charming streets, museums, cafés, and panoramic ocean views.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★★</span> 4.8 <span class="spot-dist">· 0 km</span></div><a href="attractions.html" class="spot-cta">Explore →</a></div>
+        </div>
+      </article>
+      <article class="spot-card fade-in">
+        <div class="spot-img"><div class="spot-img-inner bg-beach1"><div class="spot-icon">🏖️</div></div><div class="spot-rank">2</div><div class="spot-cat-label cat-beach">Beach</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Unawatuna Beach</h3>
+          <p class="spot-desc">One of Sri Lanka's most beloved beaches — a sheltered bay with calm turquoise waters, coral reefs, and a lively beachfront.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★★</span> 4.7 <span class="spot-dist">· 5 km</span></div><a href="attractions.html" class="spot-cta">Explore →</a></div>
+        </div>
+      </article>
+      <article class="spot-card fade-in">
+        <div class="spot-img"><div class="spot-img-inner bg-jungle"><div class="spot-icon">🌿</div></div><div class="spot-rank">5</div><div class="spot-cat-label cat-nature">Nature</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Kanneliya Rainforest</h3>
+          <p class="spot-desc">A UNESCO Biosphere Reserve offering trekking trails through lush primary rainforest, with exotic flora, fauna, and waterfalls.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★☆</span> 4.4 <span class="spot-dist">· 23 km</span></div><a href="attractions.html" class="spot-cta">Explore →</a></div>
+        </div>
+      </article>
+    </div>
+    <div style="text-align:center;margin-top:36px;">
+      <a href="attractions.html" class="btn btn-dark">View all 11 attractions</a>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSPORT PREVIEW -->
+<section class="transport-band">
+  <div class="transport-inner">
+    <div class="transport-header fade-in">
+      <div class="eyebrow" style="color:var(--clr-accent-lt);">Getting Here</div>
+      <h2>Colombo → Galle</h2>
+      <p>Two convenient public transport options connect you to Galle. Travel times are estimates — actual conditions may vary.</p>
+    </div>
+    <div class="transport-grid" style="margin-bottom:20px;">
+      <div class="transport-card fade-in">
+        <div class="tc-icon">🚂</div>
+        <div class="tc-type">By Rail</div>
+        <div class="tc-title">Coastal Railway Line</div>
+        <div class="tc-details">
+          <div class="tc-row"><span class="tc-label">Duration</span><span class="tc-value">~2 hrs 30 min <span class="badge">Scenic</span></span></div>
+          <div class="tc-row"><span class="tc-label">Cost</span><span class="tc-value">LKR 100 – 600</span></div>
+          <div class="tc-row"><span class="tc-label">Departure</span><span class="tc-value">Colombo Fort Station</span></div>
+        </div>
+      </div>
+      <div class="transport-card fade-in">
+        <div class="tc-icon">🚌</div>
+        <div class="tc-type">By Bus</div>
+        <div class="tc-title">Southern Highway Express</div>
+        <div class="tc-details">
+          <div class="tc-row"><span class="tc-label">Duration</span><span class="tc-value">~2 hrs <span class="badge">Express</span></span></div>
+          <div class="tc-row"><span class="tc-label">Cost</span><span class="tc-value">LKR 180 – 350</span></div>
+          <div class="tc-row"><span class="tc-label">Departure</span><span class="tc-value">Bastian Mawatha</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:28px;">
+      <a href="navigation.html" class="btn btn-primary">View Full Route & Map →</a>
+    </div>
+    <p class="disclaimer-note">⚠ Travel times are estimates. Please verify schedules before travel.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="site-logo"><span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span></div>
+      <p>Your comprehensive travel guide for Galle, Sri Lanka. Plan your trip with transport guides, curated attractions, and visitor reviews.</p>
+    </div>
+    <div class="footer-col"><h4>Explore</h4><ul>
+      <li><a href="attractions.html">All Attractions</a></li>
+      <li><a href="attractions.html">Historical Sites</a></li>
+      <li><a href="attractions.html">Beaches</a></li>
+      <li><a href="attractions.html">Religious Sites</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Plan Trip</h4><ul>
+      <li><a href="navigation.html">Getting to Galle</a></li>
+      <li><a href="navigation.html">Map View</a></li>
+      <li><a href="itinerary.html">One-Day Itinerary</a></li>
+      <li><a href="feedback.html">FAQ</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>About</h4><ul>
+      <li><a href="#">About This Site</a></li>
+      <li><a href="feedback.html">Submit Feedback</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Visit Galle · ITE2953 Coursework · E2328015</span>
+    <span>A tourism platform for Galle, Sri Lanka</span>
+  </div>
+  <div class="disclaimer">Travel times, costs, and attraction information are estimates for guidance only. Visit Galle does not facilitate bookings or payments.</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script src="shared.js"></script>
+</body>
+</html>

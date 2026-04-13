@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map & Navigation – Visit Galle</title>
+  <meta name="description" content="Interactive map showing the route from Colombo to Galle and all tourist attraction markers within 25 km of Galle.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #map { height: 620px; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+    .map-container { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
+    .map-toolbar {
+      background: var(--clr-white); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+      border-bottom: 2px solid var(--clr-border);
+    }
+    .map-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--clr-text); }
+    .map-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+    .map-ctrl-btn {
+      padding: 6px 14px; border-radius: 20px;
+      border: 1.5px solid var(--clr-border);
+      background: var(--clr-white); font-size: .78rem; font-weight: 600;
+      color: var(--clr-muted); cursor: pointer; transition: all var(--transition);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .map-ctrl-btn:hover, .map-ctrl-btn.active {
+      background: var(--clr-primary); border-color: var(--clr-primary); color: var(--clr-white);
+    }
+
+    /* Side panel layout */
+    .map-page-grid {
+      display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start;
+    }
+
+    /* Attraction list panel */
+    .attr-list { display: flex; flex-direction: column; gap: 10px; }
+    .attr-item {
+      background: var(--clr-white); border-radius: var(--radius-md);
+      padding: 13px 16px; box-shadow: var(--shadow-sm);
+      display: flex; align-items: flex-start; gap: 12px;
+      cursor: pointer; transition: all var(--transition);
+      border-left: 3px solid transparent;
+    }
+    .attr-item:hover { box-shadow: var(--shadow-md); border-left-color: var(--clr-accent); }
+    .attr-item.highlighted { border-left-color: var(--clr-accent); background: #fdf9f4; }
+    .attr-num {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--clr-accent); color: var(--clr-white);
+      font-size: .72rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .attr-num.cat-hist  { background: #7c4a2d; }
+    .attr-num.cat-bch   { background: #0077b6; }
+    .attr-num.cat-rel   { background: #8b3a0f; }
+    .attr-num.cat-nat   { background: #166534; }
+    .attr-num.cat-din   { background: #991b1b; }
+    .attr-info h4 { font-size: .86rem; font-weight: 600; color: var(--clr-text); margin-bottom: 2px; }
+    .attr-info span { font-size: .72rem; color: var(--clr-muted); }
+    .attr-dist { margin-left: auto; font-size: .72rem; font-weight: 600; color: var(--clr-primary); white-space: nowrap; flex-shrink: 0; }
+
+    /* Info panel */
+    .info-panel {
+      background: var(--clr-white); border-radius: var(--radius-lg);
+      padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 20px;
+    }
+    .info-panel h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: 6px; color: var(--clr-text); }
+    .info-panel p  { font-size: .82rem; color: var(--clr-muted); line-height: 1.55; }
+
+    /* Route steps */
+    .route-steps { display: flex; flex-direction: column; gap: 8px; }
+    .route-step {
+      display: flex; align-items: center; gap: 12px;
+      font-size: .82rem; padding: 8px 10px;
+      background: var(--clr-bg); border-radius: var(--radius-sm);
+    }
+    .step-icon { font-size: 1rem; flex-shrink: 0; }
+    .step-text { flex: 1; color: var(--clr-text); }
+    .step-time { font-size: .72rem; font-weight: 600; color: var(--clr-accent); white-space: nowrap; }
+
+    /* Legend */
+    .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .leg-item { display: flex; align-items: center; gap: 8px; font-size: .76rem; color: var(--clr-muted); }
+    .leg-dot  { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Custom Leaflet markers */
+    .custom-marker {
+      width: 32px; height: 32px; border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      border: 2px solid rgba(255,255,255,.9);
+      box-shadow: 0 2px 8px rgba(0,0,0,.3);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .marker-inner { transform: rotate(45deg); font-size: 14px; }
+
+    /* start/end markers */
+    .start-marker { background: #166534; }
+    .end-marker   { background: #c8873a; }
+
+    @media(max-width:960px) {
+      .map-page-grid { grid-template-columns: 1fr; }
+      #map { height: 450px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="site-logo"><span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span></a>
+    <nav class="site-nav" id="site-nav">
+      <a href="index.html">Home</a>
+      <a href="attractions.html">Attractions</a>
+      <a href="navigation.html" class="active">Getting Here</a>
+      <a href="itinerary.html">Itinerary</a>
+      <a href="feedback.html" class="nav-cta">Feedback</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="eyebrow" style="color:var(--clr-accent-lt);">Interactive Map</div>
+    <h1>Map & <em>Navigation</em></h1>
+    <p>Explore the route from Colombo to Galle and discover all major tourist attractions within 25 km of Galle marked directly on the map.</p>
+  </div>
+</section>
+
+<!-- TRANSPORT OVERVIEW -->
+<section class="section-sm" style="background:var(--clr-white);border-bottom:1px solid var(--clr-border);">
+  <div class="page-wrap">
+    <div class="transport-grid">
+      <div style="background:var(--clr-bg);border-radius:var(--radius-lg);padding:20px 24px;display:flex;align-items:center;gap:16px;">
+        <div style="font-size:2rem;">🚂</div>
+        <div>
+          <div class="tc-type" style="color:var(--clr-primary);">Coastal Railway</div>
+          <div style="font-weight:600;font-size:.95rem;color:var(--clr-text);">Colombo Fort → Galle Station</div>
+          <div style="font-size:.8rem;color:var(--clr-muted);margin-top:3px;">~2 hrs 30 min · LKR 100–600 · Several trains daily</div>
+        </div>
+      </div>
+      <div style="background:var(--clr-bg);border-radius:var(--radius-lg);padding:20px 24px;display:flex;align-items:center;gap:16px;">
+        <div style="font-size:2rem;">🚌</div>
+        <div>
+          <div class="tc-type" style="color:var(--clr-primary);">Southern Highway Express</div>
+          <div style="font-weight:600;font-size:.95rem;color:var(--clr-text);">Bastian Mawatha → Galle Bus Stand</div>
+          <div style="font-size:.8rem;color:var(--clr-muted);margin-top:3px;">~2 hrs · LKR 180–350 · Every 15–30 min</div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:.74rem;color:var(--clr-muted);margin-top:14px;text-align:center;">⚠ Travel times are estimates. Actual conditions may vary due to traffic, weather, or service changes.</p>
+  </div>
+</section>
+
+<!-- MAP SECTION -->
+<section class="section">
+  <div class="page-wrap">
+    <div class="map-page-grid">
+
+      <!-- MAP -->
+      <div>
+        <div class="map-container fade-in">
+          <div class="map-toolbar">
+            <div class="map-title">🗺️ Interactive Map — Colombo to Galle &amp; Attractions</div>
+            <div class="map-controls">
+              <button class="map-ctrl-btn active" id="btn-route" onclick="toggleLayer('route')">🛣️ Route</button>
+              <button class="map-ctrl-btn active" id="btn-attractions" onclick="toggleLayer('attractions')">📍 Attractions</button>
+              <button class="map-ctrl-btn" id="btn-fit" onclick="fitAll()">⊞ Fit All</button>
+            </div>
+          </div>
+          <div id="map"></div>
+        </div>
+
+        <!-- LEGEND -->
+        <div style="background:var(--clr-white);border-radius:var(--radius-lg);padding:18px 20px;box-shadow:var(--shadow-sm);margin-top:16px;">
+          <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--clr-muted);margin-bottom:12px;">Map Legend</div>
+          <div class="legend-grid">
+            <div class="leg-item"><div class="leg-dot" style="background:#166534;"></div> Colombo (Start)</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#c8873a;"></div> Galle (End)</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#7c4a2d;"></div> Historical</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#0077b6;"></div> Beach</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#8b3a0f;"></div> Religious</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#166534;"></div> Nature</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#991b1b;"></div> Dining</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#2563eb;"></div> Route Line</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDE PANEL -->
+      <div>
+        <!-- Route Steps -->
+        <div class="info-panel">
+          <h3>🧭 Journey Steps</h3>
+          <p style="margin-bottom:14px;">Recommended route from Colombo to Galle city centre.</p>
+          <div class="route-steps">
+            <div class="route-step"><div class="step-icon">🟢</div><div class="step-text"><strong>Colombo Fort Station</strong><br><span style="font-size:.76rem;color:var(--clr-muted);">Board the coastal train</span></div><div class="step-time">Start</div></div>
+            <div class="route-step"><div class="step-icon">🚉</div><div class="step-text">Moratuwa Station</div><div class="step-time">~25 min</div></div>
+            <div class="route-step"><div class="step-icon">🚉</div><div class="step-text">Panadura Station</div><div class="step-time">~40 min</div></div>
+            <div class="route-step"><div class="step-icon">🚉</div><div class="step-text">Kalutara South</div><div class="step-time">~60 min</div></div>
+            <div class="route-step"><div class="step-icon">🚉</div><div class="step-text">Ambalangoda Station</div><div class="step-time">~100 min</div></div>
+            <div class="route-step"><div class="step-icon">🚉</div><div class="step-text">Hikkaduwa Station</div><div class="step-time">~120 min</div></div>
+            <div class="route-step"><div class="step-icon">🏁</div><div class="step-text"><strong>Galle Railway Station</strong><br><span style="font-size:.76rem;color:var(--clr-muted);">Walk 10 min to Galle Fort</span></div><div class="step-time">~150 min</div></div>
+          </div>
+        </div>
+
+        <!-- Attraction List -->
+        <div class="info-panel" style="padding-bottom:0;">
+          <h3>📍 Attractions List</h3>
+          <p style="margin-bottom:14px;">Click any item to zoom to it on the map.</p>
+          <div class="attr-list" id="attr-list">
+            <!-- populated by JS -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand"><div class="site-logo"><span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span></div><p>Your comprehensive travel guide for Galle, Sri Lanka.</p></div>
+    <div class="footer-col"><h4>Explore</h4><ul><li><a href="attractions.html">All Attractions</a></li><li><a href="navigation.html">Map View</a></li><li><a href="itinerary.html">Itinerary</a></li></ul></div>
+    <div class="footer-col"><h4>Plan Trip</h4><ul><li><a href="navigation.html">Getting to Galle</a></li><li><a href="feedback.html">Feedback</a></li></ul></div>
+    <div class="footer-col"><h4>About</h4><ul><li><a href="index.html">Home</a></li><li><a href="#">Privacy</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Visit Galle · ITE2953 · E2328015</span></div>
+  <div class="disclaimer">Map data © OpenStreetMap contributors. Route and travel information are estimates only.</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="shared.js"></script>
+<script>
+/* ── ATTRACTION DATA ─────────────────────────────── */
+const ATTRACTIONS = [
+  { id:1,  name:'Galle Dutch Fort',         cat:'historical', catLabel:'Historical', icon:'🏰', lat:6.0269,  lng:80.2170, dist:'0 km',    color:'#7c4a2d', desc:'UNESCO World Heritage Site — 17th-century Dutch fort with cobblestone streets, museums & panoramic ocean views.' },
+  { id:2,  name:'Unawatuna Beach',           cat:'beach',      catLabel:'Beach',      icon:'🏖️', lat:6.0100,  lng:80.2490, dist:'5 km',    color:'#0077b6', desc:'Sheltered bay with calm turquoise waters, coral reefs, snorkelling & lively beachfront restaurants.' },
+  { id:3,  name:'Galle Lighthouse',          cat:'historical', catLabel:'Historical', icon:'🔦', lat:6.0238,  lng:80.2148, dist:'0.5 km',  color:'#7c4a2d', desc:"Sri Lanka's oldest lighthouse within the fort walls, offering sweeping ocean views." },
+  { id:4,  name:'Dutch Reformed Church',     cat:'historical', catLabel:'Historical', icon:'🏛️', lat:6.0281,  lng:80.2162, dist:'0.3 km',  color:'#7c4a2d', desc:'Built in 1755 — one of Sri Lanka\'s oldest Protestant churches with fascinating colonial tombstones.' },
+  { id:5,  name:'Kanneliya Rainforest',      cat:'nature',     catLabel:'Nature',     icon:'🌿', lat:6.1200,  lng:80.3500, dist:'23 km',   color:'#166534', desc:'UNESCO Biosphere Reserve — trekking trails through lush primary rainforest with exotic flora & waterfalls.' },
+  { id:6,  name:'Kosgoda Turtle Hatchery',   cat:'beach',      catLabel:'Beach',      icon:'🐢', lat:6.2100,  lng:80.0500, dist:'20 km',   color:'#0077b6', desc:'Sea turtle conservation project where you can watch hatchlings enter the ocean for the first time.' },
+  { id:7,  name:'Mirissa Whale Watching',    cat:'nature',     catLabel:'Nature',     icon:'🐋', lat:5.9476,  lng:80.4711, dist:'24 km',   color:'#166534', desc:"One of the world's best whale-watching spots — blue whales & sperm whales in their natural habitat." },
+  { id:8,  name:'Sri Sudharmalaya Temple',   cat:'religious',  catLabel:'Religious',  icon:'🛕', lat:6.0290,  lng:80.2190, dist:'0.8 km',  color:'#8b3a0f', desc:'Beautifully decorated Buddhist temple within the fort with intricate murals and serene atmosphere.' },
+  { id:9,  name:'Meeran Jumma Mosque',       cat:'religious',  catLabel:'Religious',  icon:'🕌', lat:6.0278,  lng:80.2178, dist:'0.4 km',  color:'#8b3a0f', desc:"Moorish-style mosque inside the fort reflecting Galle's diverse religious heritage." },
+  { id:10, name:'Midigama Surf Beach',       cat:'beach',      catLabel:'Beach',      icon:'🏄', lat:5.9800,  lng:80.3900, dist:'18 km',   color:'#0077b6', desc:'Popular surfing destination with consistent reef breaks for all levels amid palm-fringed coastline.' },
+  { id:11, name:'Galle Fort Café District',  cat:'dining',     catLabel:'Dining',     icon:'🍛', lat:6.0265,  lng:80.2175, dist:'0.2 km',  color:'#991b1b', desc:'Eclectic cafés, rooftop restaurants, and local eateries on the fort\'s cobblestone streets.' },
+];
+
+/* ── ROUTE WAYPOINTS (simplified Colombo → Galle coastal) ── */
+const ROUTE = [
+  [6.9318, 79.8477], // Colombo Fort
+  [6.7961, 79.9021], // Moratuwa
+  [6.7119, 79.9013], // Panadura
+  [6.5835, 79.9590], // Kalutara
+  [6.4059, 80.0510], // Aluthgama
+  [6.2385, 80.0600], // Ambalangoda
+  [6.1397, 80.0995], // Hikkaduwa
+  [6.0835, 80.1620], // Unawatuna coast
+  [6.0269, 80.2170], // Galle Fort
+];
+
+/* ── MAP INIT ────────────────────────────────────────────── */
+const map = L.map('map', { zoomControl: true, attributionControl: true })
+  .setView([6.3000, 80.1500], 9);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+  maxZoom: 18
+}).addTo(map);
+
+/* ── ROUTE POLYLINE ─────────────────────────────────────── */
+const routeLine = L.polyline(ROUTE, {
+  color: '#2563eb', weight: 5, opacity: 0.75,
+  dashArray: '10, 6', lineJoin: 'round'
+}).addTo(map);
+
+/* ── START/END MARKERS ──────────────────────────────────── */
+function pinIcon(color, emoji) {
+  return L.divIcon({
+    className: '',
+    html: `<div style="background:${color};width:36px;height:36px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;">
+             <span style="transform:rotate(45deg);font-size:16px;">${emoji}</span>
+           </div>`,
+    iconSize: [36,36], iconAnchor: [18,36], popupAnchor: [0,-36]
+  });
+}
+
+L.marker([6.9318, 79.8477], { icon: pinIcon('#166534','🟢') })
+  .bindPopup('<div class="popup-name">Colombo Fort Station</div><div class="popup-cat">Journey Start</div><div class="popup-desc">Board the scenic Coastal Railway Line towards Galle.</div>')
+  .addTo(map);
+
+L.marker([6.0269, 80.2170], { icon: pinIcon('#c8873a','🏁') })
+  .bindPopup('<div class="popup-name">Galle City</div><div class="popup-cat">Journey End</div><div class="popup-desc">Welcome to Galle! Walk 10 min to reach the famous Dutch Fort.</div>')
+  .addTo(map);
+
+/* ── ATTRACTION MARKERS ─────────────────────────────────── */
+const attrMarkers = [];
+const catClass = { historical:'cat-hist', beach:'cat-bch', religious:'cat-rel', nature:'cat-nat', dining:'cat-din' };
+
+ATTRACTIONS.forEach(a => {
+  const icon = L.divIcon({
+    className: '',
+    html: `<div style="background:${a.color};width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;">
+             <span style="transform:rotate(45deg);font-size:15px;">${a.icon}</span>
+           </div>`,
+    iconSize: [34,34], iconAnchor: [17,34], popupAnchor: [0,-34]
+  });
+
+  const marker = L.marker([a.lat, a.lng], { icon })
+    .bindPopup(`<div class="popup-name">${a.icon} ${a.name}</div><div class="popup-cat">${a.catLabel}</div><div class="popup-desc">${a.desc}</div><div class="popup-dist">📍 ${a.dist} from Galle Fort</div>`)
+    .addTo(map);
+
+  attrMarkers.push({ marker, data: a });
+});
+
+/* ── LAYER TOGGLES ──────────────────────────────────────── */
+let routeVisible = true, attrsVisible = true;
+
+function toggleLayer(layer) {
+  if (layer === 'route') {
+    routeVisible = !routeVisible;
+    routeVisible ? routeLine.addTo(map) : map.removeLayer(routeLine);
+    document.getElementById('btn-route').classList.toggle('active', routeVisible);
+  }
+  if (layer === 'attractions') {
+    attrsVisible = !attrsVisible;
+    attrMarkers.forEach(({ marker }) => {
+      attrsVisible ? marker.addTo(map) : map.removeLayer(marker);
+    });
+    document.getElementById('btn-attractions').classList.toggle('active', attrsVisible);
+  }
+}
+
+function fitAll() {
+  const bounds = L.latLngBounds(ROUTE.map(p => L.latLng(p[0], p[1])));
+  ATTRACTIONS.forEach(a => bounds.extend([a.lat, a.lng]));
+  map.fitBounds(bounds, { padding: [40, 40] });
+}
+
+/* ── ATTRACTION LIST PANEL ──────────────────────────────── */
+const listEl = document.getElementById('attr-list');
+ATTRACTIONS.forEach((a, i) => {
+  const item = document.createElement('div');
+  item.className = 'attr-item';
+  item.id = `attr-item-${a.id}`;
+  item.innerHTML = `
+    <div class="attr-num ${catClass[a.cat]}">${a.id}</div>
+    <div class="attr-info"><h4>${a.icon} ${a.name}</h4><span>${a.catLabel}</span></div>
+    <div class="attr-dist">${a.dist}</div>
+  `;
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.attr-item').forEach(el => el.classList.remove('highlighted'));
+    item.classList.add('highlighted');
+    map.flyTo([a.lat, a.lng], 14, { duration: 1.2 });
+    attrMarkers[i].marker.openPopup();
+  });
+  listEl.appendChild(item);
+});
+</script>
+</body>
+</html>

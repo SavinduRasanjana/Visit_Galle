@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback – Visit Galle</title>
+  <meta name="description" content="Share your travel experience in Galle, Sri Lanka. Submit feedback to help future visitors plan their perfect trip.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .fb-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .star-rating { display: flex; gap: 6px; margin-bottom: 4px; }
+    .star-rating input { display: none; }
+    .star-rating label {
+      font-size: 1.8rem; cursor: pointer; color: #d1d5db;
+      transition: color var(--transition); line-height: 1;
+    }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label { color: #d1d5db; }
+    .star-rating input:checked + label,
+    .star-rating label:hover { color: #f59e0b; }
+    /* Sibling approach */
+    .star-rating { flex-direction: row-reverse; justify-content: flex-end; }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label { color: #f59e0b; }
+    .star-rating input:checked ~ label { color: #f59e0b; }
+
+    .faq-section { margin-top: 48px; }
+    .faq-item { border-bottom: 1px solid var(--clr-border); }
+    .faq-q {
+      width: 100%; text-align: left; padding: 16px 0;
+      background: none; border: none; cursor: pointer;
+      font-size: .92rem; font-weight: 600; color: var(--clr-text);
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      transition: color var(--transition);
+    }
+    .faq-q:hover { color: var(--clr-primary); }
+    .faq-q .chevron { font-size: .75rem; transition: transform var(--transition); }
+    .faq-a { display: none; font-size: .86rem; color: var(--clr-muted); line-height: 1.7; padding-bottom: 16px; }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .chevron { transform: rotate(180deg); }
+    .faq-item.open .faq-q { color: var(--clr-primary); }
+
+    .char-count { font-size: .72rem; color: var(--clr-muted); text-align: right; margin-top: 3px; }
+    .success-banner {
+      display: none; background: #dcfce7; border: 1px solid #86efac;
+      border-radius: var(--radius-md); padding: 16px 20px;
+      font-size: .88rem; color: #166534; font-weight: 500;
+      margin-bottom: 20px;
+    }
+    .success-banner.show { display: flex; align-items: center; gap: 10px; }
+
+    @media(max-width:960px) { .fb-layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="site-logo"><span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span></a>
+    <nav class="site-nav" id="site-nav">
+      <a href="index.html">Home</a>
+      <a href="attractions.html">Attractions</a>
+      <a href="navigation.html">Getting Here</a>
+      <a href="itinerary.html">Itinerary</a>
+      <a href="feedback.html" class="active nav-cta">Feedback</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="eyebrow" style="color:var(--clr-accent-lt);">Visitor Voices</div>
+    <h1>Share Your <em>Experience</em></h1>
+    <p>Your feedback helps future travellers discover the best of Galle. Whether you loved it, have suggestions, or want to highlight a hidden gem — we want to hear from you.</p>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="section">
+  <div class="page-wrap">
+    <div class="fb-layout">
+
+      <!-- LEFT: FORM -->
+      <div class="fade-in">
+        <div class="eyebrow">Leave a Review</div>
+        <h2 class="section-title" style="margin-bottom:8px;">Tell Us About Your Visit</h2>
+        <div class="divider" style="margin-bottom:28px;"></div>
+
+        <div class="success-banner" id="success-banner">
+          ✅ Thank you! Your feedback has been submitted successfully and will be reviewed shortly.
+        </div>
+
+        <form class="form-stack" id="feedback-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Full Name <span style="color:red">*</span></label>
+              <input type="text" id="name" placeholder="Your full name" required maxlength="100">
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address <span style="color:red">*</span></label>
+              <input type="email" id="email" placeholder="your@email.com" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="attraction">Attraction Visited</label>
+              <select id="attraction">
+                <option value="">Select attraction (optional)</option>
+                <option>Galle Dutch Fort</option>
+                <option>Unawatuna Beach</option>
+                <option>Galle Lighthouse</option>
+                <option>Dutch Reformed Church</option>
+                <option>Kanneliya Rainforest</option>
+                <option>Kosgoda Turtle Hatchery</option>
+                <option>Mirissa Whale Watching</option>
+                <option>Sri Sudharmalaya Temple</option>
+                <option>Meeran Jumma Mosque</option>
+                <option>Midigama Surf Beach</option>
+                <option>Galle Fort Café District</option>
+                <option>Multiple / General Galle</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="visit-date">Date of Visit</label>
+              <input type="date" id="visit-date">
+            </div>
+          </div>
+
+          <!-- Star Rating -->
+          <div class="form-group">
+            <label>Overall Rating <span style="color:red">*</span></label>
+            <div class="star-rating" id="star-rating">
+              <input type="radio" id="s5" name="rating" value="5"><label for="s5" title="Excellent">★</label>
+              <input type="radio" id="s4" name="rating" value="4"><label for="s4" title="Very Good">★</label>
+              <input type="radio" id="s3" name="rating" value="3"><label for="s3" title="Good">★</label>
+              <input type="radio" id="s2" name="rating" value="2"><label for="s2" title="Fair">★</label>
+              <input type="radio" id="s1" name="rating" value="1"><label for="s1" title="Poor">★</label>
+            </div>
+            <span id="rating-label" style="font-size:.78rem;color:var(--clr-muted);margin-top:4px;display:block;">Click to rate</span>
+          </div>
+
+          <div class="form-group">
+            <label for="visit-type">Type of Visit</label>
+            <select id="visit-type">
+              <option value="">Select type (optional)</option>
+              <option>Solo traveller</option>
+              <option>Couple</option>
+              <option>Family with children</option>
+              <option>Group of friends</option>
+              <option>Student / Backpacker</option>
+              <option>Business trip</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Your Message <span style="color:red">*</span></label>
+            <textarea id="message" placeholder="Share your experience — what did you enjoy? Any tips for future visitors? How was the transport?" required maxlength="1000" rows="5"></textarea>
+            <div class="char-count"><span id="char-count">0</span>/1000 characters</div>
+          </div>
+
+          <p class="form-note">* Required fields. Your feedback will be reviewed before publishing. Your email will not be shared publicly.</p>
+
+          <div class="form-submit" style="gap:12px;">
+            <button type="button" onclick="resetForm()" class="btn btn-outline" style="padding:12px 22px;">Clear</button>
+            <button type="submit" class="btn btn-dark" style="padding:12px 28px;">Submit Feedback →</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- RIGHT: REVIEWS + FAQ -->
+      <div class="fade-in">
+        <div class="eyebrow">Recent Reviews</div>
+        <h2 class="section-title" style="margin-bottom:8px;">What Visitors Say</h2>
+        <div class="divider" style="margin-bottom:24px;"></div>
+
+        <div class="review-cards">
+          <div class="review-card">
+            <div class="rc-stars">★★★★★</div>
+            <p class="rc-text">"The fort is absolutely magical — we spent the whole morning just wandering the old streets. The train ride from Colombo along the coast was genuinely unforgettable. This website helped me plan everything perfectly!"</p>
+            <div class="rc-author">— Priya S. · Colombo · Galle Dutch Fort</div>
+          </div>
+          <div class="review-card">
+            <div class="rc-stars">★★★★★</div>
+            <p class="rc-text">"Unawatuna was absolutely stunning. Crystal clear water, amazing local food and very easy to reach from the fort by tuk-tuk. A must-do for any visitor to Galle. Highly recommend the snorkelling!"</p>
+            <div class="rc-author">— Thomas W. · Germany · Unawatuna Beach</div>
+          </div>
+          <div class="review-card">
+            <div class="rc-stars">★★★★☆</div>
+            <p class="rc-text">"Perfect one-day trip. The itinerary guide here was spot on — managed to see the fort, the religious sites and still catch the beach before the evening train back. The lighthouse views were spectacular."</p>
+            <div class="rc-author">— Nimal P. · Kandy · Multiple Attractions</div>
+          </div>
+          <div class="review-card">
+            <div class="rc-stars">★★★★★</div>
+            <p class="rc-text">"Went for whale watching in Mirissa and then spent the afternoon in Galle. What a day! The blue whale sighting was once in a lifetime. The fort at sunset was equally breathtaking."</p>
+            <div class="rc-author">— Sarah L. · Australia · Mirissa + Galle Fort</div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq-section">
+          <div class="eyebrow" style="margin-top:36px;">FAQ</div>
+          <h3 class="section-title" style="font-size:1.3rem;margin-bottom:20px;">Common Questions</h3>
+
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">Is Galle Fort free to enter? <span class="chevron">▼</span></button>
+            <div class="faq-a">Yes, walking the streets and ramparts of the Galle Fort is free. Individual museums and sites within the fort (such as the Maritime Museum) may charge a small entry fee of LKR 200–500.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">How do I get from Galle Station to the Fort? <span class="chevron">▼</span></button>
+            <div class="faq-a">The Galle Fort is approximately 1 km from the railway station — a pleasant 10–15 minute walk along the waterfront road. Tuk-tuks are also readily available and cost around LKR 100–200 for the short ride.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">Is it safe to swim at Unawatuna Beach? <span class="chevron">▼</span></button>
+            <div class="faq-a">Unawatuna has a sheltered bay which generally makes it one of the safer beaches for swimming in the south. However, always check local conditions before entering the water, especially during the monsoon season (May–September when the southwest monsoon affects the south coast).</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">Can I book transport tickets online? <span class="chevron">▼</span></button>
+            <div class="faq-a">This website does not support ticket booking. Visit Galle is an information guide only. For train tickets, visit the Sri Lanka Railways website or purchase at the station. Bus tickets are typically purchased on board.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">What is the best time of year to visit Galle? <span class="chevron">▼</span></button>
+            <div class="faq-a">The best time to visit Galle is from December to April, during the dry season on the south coast. July and August also see calmer weather. The southwest monsoon (May–September) brings rain and rougher seas, though the fort and cultural sites remain accessible.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand"><div class="site-logo"><span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span></div><p>Your comprehensive travel guide for Galle, Sri Lanka.</p></div>
+    <div class="footer-col"><h4>Explore</h4><ul><li><a href="attractions.html">All Attractions</a></li><li><a href="navigation.html">Map View</a></li><li><a href="itinerary.html">Itinerary</a></li></ul></div>
+    <div class="footer-col"><h4>Plan Trip</h4><ul><li><a href="navigation.html">Getting to Galle</a></li><li><a href="feedback.html">Feedback</a></li></ul></div>
+    <div class="footer-col"><h4>About</h4><ul><li><a href="index.html">Home</a></li><li><a href="#">Privacy</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Visit Galle · ITE2953 · E2328015</span></div>
+  <div class="disclaimer">Feedback is reviewed before publishing. Email addresses are not displayed publicly.</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script src="shared.js"></script>
+<script>
+  // Star rating labels
+  const ratingLabels = { 5:'Excellent ★★★★★', 4:'Very Good ★★★★☆', 3:'Good ★★★☆☆', 2:'Fair ★★☆☆☆', 1:'Poor ★☆☆☆☆' };
+  document.querySelectorAll('input[name="rating"]').forEach(input => {
+    input.addEventListener('change', () => {
+      document.getElementById('rating-label').textContent = ratingLabels[input.value] || 'Click to rate';
+    });
+  });
+
+  // Char count
+  const msgEl = document.getElementById('message');
+  const countEl = document.getElementById('char-count');
+  msgEl.addEventListener('input', () => { countEl.textContent = msgEl.value.length; });
+
+  // Form submit
+  document.getElementById('feedback-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const name  = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const msg   = document.getElementById('message').value.trim();
+    const rating= document.querySelector('input[name="rating"]:checked');
+    if (!name || !email || !msg || !rating) {
+      showToast('⚠ Please fill in all required fields and select a rating.');
+      return;
+    }
+    document.getElementById('success-banner').classList.add('show');
+    document.getElementById('feedback-form').reset();
+    countEl.textContent = '0';
+    document.getElementById('rating-label').textContent = 'Click to rate';
+    document.getElementById('success-banner').scrollIntoView({ behavior:'smooth', block:'center' });
+  });
+
+  function resetForm() {
+    document.getElementById('feedback-form').reset();
+    countEl.textContent = '0';
+    document.getElementById('rating-label').textContent = 'Click to rate';
+    document.getElementById('success-banner').classList.remove('show');
+  }
+
+  // FAQ accordion
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>

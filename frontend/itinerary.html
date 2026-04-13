@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One-Day Itinerary – Visit Galle</title>
+  <meta name="description" content="A perfectly curated one-day itinerary for your visit to Galle, Sri Lanka — from Colombo to Galle and back.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .it-grid { display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start; }
+    .it-summary-card {
+      background: var(--clr-primary); border-radius: var(--radius-lg);
+      padding: 28px 24px; color: var(--clr-white);
+      position: sticky; top: calc(var(--header-h) + 24px);
+    }
+    .it-summary-card h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
+    .summary-items { display: flex; flex-direction: column; gap: 10px; }
+    .sum-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; background: rgba(255,255,255,.08); border-radius: var(--radius-sm); font-size: .83rem; }
+    .sum-item span:first-child { color: rgba(255,255,255,.65); }
+    .sum-item span:last-child  { color: var(--clr-white); font-weight: 600; }
+    .tip-cards { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+    .tip-card { background: rgba(255,255,255,.07); border-radius: var(--radius-sm); padding: 12px 14px; border-left: 2px solid var(--clr-accent); }
+    .tip-card strong { display: block; font-size: .78rem; font-weight: 700; color: var(--clr-accent-lt); margin-bottom: 4px; }
+    .tip-card p { font-size: .78rem; color: rgba(255,255,255,.65); line-height: 1.5; }
+    .alt-badge {
+      display: inline-block; background: var(--clr-bg); color: var(--clr-muted);
+      font-size: .68rem; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+      border: 1px solid var(--clr-border); margin-left: 8px;
+    }
+    .day-header {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--clr-primary); color: var(--clr-white);
+      border-radius: var(--radius-lg); padding: 20px 24px;
+      margin-bottom: 28px;
+    }
+    .day-badge {
+      background: var(--clr-accent); border-radius: 50%;
+      width: 52px; height: 52px; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; flex-shrink: 0;
+    }
+    .day-header-text h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; }
+    .day-header-text p  { font-size: .82rem; color: rgba(255,255,255,.65); margin-top: 2px; }
+    @media(max-width:960px) {
+      .it-grid { grid-template-columns: 1fr; }
+      .it-summary-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="site-logo"><span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span></a>
+    <nav class="site-nav" id="site-nav">
+      <a href="index.html">Home</a>
+      <a href="attractions.html">Attractions</a>
+      <a href="navigation.html">Getting Here</a>
+      <a href="itinerary.html" class="active">Itinerary</a>
+      <a href="feedback.html" class="nav-cta">Feedback</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="eyebrow" style="color:var(--clr-accent-lt);">Sample Schedule</div>
+    <h1>One-Day <em>Galle</em> Itinerary</h1>
+    <p>A curated day trip from Colombo to Galle — carefully timed to help you make the most of every hour, from sunrise to sunset and back.</p>
+    <div class="stat-chips">
+      <div class="stat-chip"><strong>6</strong><span>Stops</span></div>
+      <div class="stat-chip"><strong>~14 hrs</strong><span>Full Day</span></div>
+      <div class="stat-chip"><strong>LKR 2,500</strong><span>Est. Budget</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ITINERARY CONTENT -->
+<section class="section">
+  <div class="page-wrap">
+    <div class="it-grid">
+
+      <!-- TIMELINE -->
+      <div>
+        <div class="day-header fade-in">
+          <div class="day-badge">1</div>
+          <div class="day-header-text">
+            <h3>Day Trip — Colombo to Galle</h3>
+            <p>Start early · Use public transport · Return by evening</p>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <div class="tl-item fade-in">
+            <div class="tl-time"><strong>6:00 AM</strong><small>Depart</small></div>
+            <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+            <div class="tl-card">
+              <h4>🟢 Depart — Colombo Fort Railway Station</h4>
+              <p>Head to Colombo Fort Station early and board the 06:05 or 06:25 coastal train to Galle. Grab a window seat on the right side for the best ocean views. The journey hugs the Indian Ocean shoreline for much of the route — one of Asia's most scenic short rail trips.</p>
+              <div class="tl-tags">
+                <span class="tl-tag">🚂 Coastal Train</span>
+                <span class="tl-tag">~2.5 hrs</span>
+                <span class="tl-tag">LKR 100–600</span>
+                <span class="tl-tag">Right-side seat for views</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-item fade-in">
+            <div class="tl-time"><strong>8:30 AM</strong><small>Morning</small></div>
+            <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+            <div class="tl-card">
+              <h4>🏁 Arrive — Galle Railway Station</h4>
+              <p>Disembark at Galle Station and walk roughly 10–15 minutes along the waterfront road towards the iconic fort walls. Stop for a quick breakfast at a local café near the station before entering the fort.</p>
+              <div class="tl-tags">
+                <span class="tl-tag">🚶 10 min walk to fort</span>
+                <span class="tl-tag">☕ Breakfast stop</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-item fade-in">
+            <div class="tl-time"><strong>9:00 AM</strong><small>~2 hrs</small></div>
+            <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+            <div class="tl-card">
+              <h4>🏰 Galle Dutch Fort — Exploration</h4>
+              <p>Spend the cooler morning hours exploring the UNESCO-listed fort. Walk the ancient sea-facing ramparts, visit the Galle Lighthouse (oldest in Sri Lanka), pop into the Dutch Reformed Church (1755), and browse the fascinating National Maritime Museum. The streets inside are wonderfully photogenic.</p>
+              <div class="tl-tags">
+                <span class="tl-tag">🏰 Fort Ramparts</span>
+                <span class="tl-tag">🔦 Galle Lighthouse</span>
+                <span class="tl-tag">🏛️ Dutch Church</span>
+                <span class="tl-tag">~2 hrs</span>
+                <span class="tl-tag">Free entry (most areas)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-item fade-in">
+            <div class="tl-time"><strong>11:00 AM</strong><small>~1.5 hrs</small></div>
+            <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+            <div class="tl-card">
+              <h4>🛕 Religious Sites & Pedlar Street</h4>
+              <p>Explore the fort's religious diversity — visit the serene Sri Sudharmalaya Buddhist Temple with its intricate murals, and the Meeran Jumma Mosque with its beautiful Moorish architecture. Then stroll Pedlar Street, lined with boutique shops, galleries, gem stores, and local craft sellers.</p>
+              <div class="tl-tags">
+                <span class="tl-tag">🛕 Buddhist Temple</span>
+                <span class="tl-tag">🕌 Mosque</span>
+                <span class="tl-tag">🛍️ Pedlar Street</span>
+                <span class="tl-tag">~1.5 hrs</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-item fade-in">
+            <div class="tl-time"><strong>12:30 PM</strong><small>~1.5 hrs</small></div>
+            <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+            <div class="tl-card">
+              <h4>🍛 Lunch — Fort Café District</h4>
+              <p>Choose from the many excellent restaurants inside and just outside the fort. For traditional Sri Lankan flavours, try a rice & curry meal at one of the local spots near the market. For a scenic lunch, rooftop cafés along the ramparts offer ocean views with fresh seafood.</p>
+              <div class="tl-tags">
+                <span class="tl-tag">🍛 Local Rice & Curry</span>
+                <span class="tl-tag">🦞 Fresh Seafood</span>
+                <span class="tl-tag">Budget ~LKR 600–1,200</span>
+                <span class="tl-tag">~1.5 hrs</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-item fade-in">
+            <div class="tl-time"><strong>2:00 PM</strong><small>~2.5 hrs</small></div>
+            <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+            <div class="tl-card">
+              <h4>🏖️ Unawatuna Beach</h4>
+              <p>Take a short tuk-tuk (5 min, ~LKR 200–300) or walk to beautiful Unawatuna Beach for a relaxing afternoon. The sheltered bay has calm, clear water ideal for swimming. You can rent snorkelling gear to explore the coral reefs, or simply relax under a palm tree with a cool drink.</p>
+              <div class="tl-tags">
+                <span class="tl-tag">🏖️ Swim & Snorkel</span>
+                <span class="tl-tag">🛺 5 min tuk-tuk</span>
+                <span class="tl-tag">~2.5 hrs</span>
+                <span class="tl-tag">Bring sunscreen</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-item fade-in">
+            <div class="tl-time"><strong>4:30 PM</strong><small>~1 hr</small></div>
+            <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+            <div class="tl-card">
+              <h4>🌅 Golden Hour — Fort Ramparts</h4>
+              <p>Return to the fort for the golden hour. The western-facing ramparts offer a spectacular sunset view over the Indian Ocean — arguably one of the most beautiful sunsets in Sri Lanka. The warm light on the old colonial architecture is magical for photography.</p>
+              <div class="tl-tags">
+                <span class="tl-tag">📷 Golden Hour</span>
+                <span class="tl-tag">🌅 Sunset Views</span>
+                <span class="tl-tag">~1 hr</span>
+                <span class="tl-tag">Bring camera</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tl-item fade-in">
+            <div class="tl-time"><strong>6:00 PM</strong><small>Return</small></div>
+            <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+            <div class="tl-card">
+              <h4>🏁 Return to Colombo</h4>
+              <p>Make your way to Galle Station (10 min walk) and board the evening train back to Colombo. The return journey at dusk offers a completely different but equally beautiful coastal experience. Last trains typically depart around 18:30–20:00 — check current schedules beforehand.</p>
+              <div class="tl-tags">
+                <span class="tl-tag">🚂 Train or 🚌 Bus</span>
+                <span class="tl-tag">~2.5 hrs return</span>
+                <span class="tl-tag">⚠ Check schedules</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUMMARY SIDEBAR -->
+      <div>
+        <div class="it-summary-card fade-in">
+          <h3>📋 Day Summary</h3>
+          <div class="summary-items">
+            <div class="sum-item"><span>Total Duration</span><span>~14 hours</span></div>
+            <div class="sum-item"><span>Transport Cost</span><span>LKR 200–1,200</span></div>
+            <div class="sum-item"><span>Food Budget</span><span>LKR 800–1,500</span></div>
+            <div class="sum-item"><span>Entry Fees</span><span>LKR 0–500</span></div>
+            <div class="sum-item"><span>Est. Total</span><span>LKR 1,500–3,500</span></div>
+            <div class="sum-item"><span>Stops</span><span>6 major stops</span></div>
+          </div>
+
+          <div class="tip-cards">
+            <div class="tip-card">
+              <strong>🚂 Book Train Early</strong>
+              <p>The scenic coastal train is popular. Book 2nd or 3rd class early morning for the best experience.</p>
+            </div>
+            <div class="tip-card">
+              <strong>👟 Wear Comfortable Shoes</strong>
+              <p>Cobblestone streets inside the fort require comfortable walking shoes. Avoid flip-flops for long walks.</p>
+            </div>
+            <div class="tip-card">
+              <strong>🌞 Beat the Heat</strong>
+              <p>Start fort sightseeing early morning when it's cooler. Head to the beach in the afternoon.</p>
+            </div>
+            <div class="tip-card">
+              <strong>📱 Download Offline Maps</strong>
+              <p>Download Galle offline maps before you go. Mobile data can be patchy near coastal areas.</p>
+            </div>
+            <div class="tip-card">
+              <strong>⚠ Disclaimer</strong>
+              <p>Times and costs are estimates. Actual travel conditions, schedules, and prices may vary.</p>
+            </div>
+          </div>
+
+          <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);">
+            <a href="navigation.html" class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:10px;">View on Map →</a>
+            <a href="feedback.html" class="btn btn-outline-white" style="width:100%;justify-content:center;">Share Your Experience</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALSO SEE SECTION -->
+<section class="section-sm" style="background:var(--clr-white);border-top:1px solid var(--clr-border);">
+  <div class="page-wrap">
+    <div class="section-meta">
+      <div class="section-header">
+        <div class="eyebrow">Also Consider</div>
+        <h2 class="section-title">Day Trips from <span>Galle</span></h2>
+      </div>
+    </div>
+    <div class="info-grid fade-in">
+      <div class="info-card">
+        <h3>🐋 Mirissa (24 km)</h3>
+        <p>Add a morning whale-watching trip from Mirissa before heading to Galle. Boats leave at dawn and return by 10 AM — timing pairs perfectly with the afternoon fort visit.</p>
+      </div>
+      <div class="info-card">
+        <h3>🐢 Kosgoda (20 km)</h3>
+        <p>Stop at the Kosgoda Turtle Hatchery on the way to or from Galle. Best visited at dusk when turtle activity is highest. Easily accessible from the main coastal road.</p>
+      </div>
+      <div class="info-card">
+        <h3>🌿 Kanneliya (23 km)</h3>
+        <p>For nature lovers, the Kanneliya Rainforest is a half-day excursion from Galle. Hire a local guide for the best trekking experience through the UNESCO Biosphere Reserve.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand"><div class="site-logo"><span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span></div><p>Your comprehensive travel guide for Galle, Sri Lanka.</p></div>
+    <div class="footer-col"><h4>Explore</h4><ul><li><a href="attractions.html">All Attractions</a></li><li><a href="navigation.html">Map View</a></li><li><a href="itinerary.html">Itinerary</a></li></ul></div>
+    <div class="footer-col"><h4>Plan Trip</h4><ul><li><a href="navigation.html">Getting to Galle</a></li><li><a href="feedback.html">Feedback</a></li></ul></div>
+    <div class="footer-col"><h4>About</h4><ul><li><a href="index.html">Home</a></li><li><a href="#">Privacy</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Visit Galle · ITE2953 · E2328015</span></div>
+  <div class="disclaimer">Itinerary times and costs are estimates only. Please verify transport schedules before travel.</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script src="shared.js"></script>
+</body>
+</html>

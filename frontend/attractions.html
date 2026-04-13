@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attractions – Visit Galle</title>
+  <meta name="description" content="Explore 11+ curated tourist attractions within 25 km of Galle, Sri Lanka — beaches, historical sites, religious places, and more.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="site-logo"><span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span></a>
+    <nav class="site-nav" id="site-nav">
+      <a href="index.html">Home</a>
+      <a href="attractions.html" class="active">Attractions</a>
+      <a href="navigation.html">Getting Here</a>
+      <a href="itinerary.html">Itinerary</a>
+      <a href="feedback.html" class="nav-cta">Feedback</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="eyebrow" style="color:var(--clr-accent-lt);">Within 25 km of Galle</div>
+    <h1>Tourist <em>Attractions</em></h1>
+    <p>Discover historical forts, pristine beaches, sacred temples, lush rainforests, and authentic dining experiences — all within easy reach of Galle city.</p>
+    <div class="stat-chips">
+      <div class="stat-chip"><strong>11</strong><span>Curated Spots</span></div>
+      <div class="stat-chip"><strong>5</strong><span>Categories</span></div>
+      <div class="stat-chip"><strong>25 km</strong><span>Radius</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ATTRACTIONS -->
+<section class="section">
+  <div class="page-wrap">
+    <div class="section-meta">
+      <div class="section-header">
+        <div class="eyebrow">All Destinations</div>
+        <h2 class="section-title">Explore <span>Galle & Surroundings</span></h2>
+        <div class="divider"></div>
+      </div>
+      <a href="navigation.html" class="view-all">View on Map →</a>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" data-cat="all">All (11)</button>
+      <button class="filter-btn" data-cat="historical">🏰 Historical</button>
+      <button class="filter-btn" data-cat="beach">🏖️ Beaches</button>
+      <button class="filter-btn" data-cat="religious">🛕 Religious</button>
+      <button class="filter-btn" data-cat="nature">🌿 Nature</button>
+      <button class="filter-btn" data-cat="dining">🍛 Dining</button>
+    </div>
+
+    <div class="spot-grid" id="spot-grid">
+
+      <article class="spot-card fade-in" data-cat="historical">
+        <div class="spot-img"><div class="spot-img-inner bg-fort"><div class="spot-icon">🏰</div></div><div class="spot-rank">1</div><div class="spot-cat-label cat-historical">Historical</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Galle Dutch Fort</h3>
+          <p class="spot-desc">A UNESCO World Heritage Site, this 17th-century Dutch fortification encloses charming cobblestone streets, museums, cafés, and panoramic ocean views from the ramparts.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★★</span> 4.8 <span class="spot-dist">· 0 km</span></div><a href="#" class="spot-cta">Details →</a></div>
+        </div>
+      </article>
+
+      <article class="spot-card fade-in" data-cat="beach">
+        <div class="spot-img"><div class="spot-img-inner bg-beach1"><div class="spot-icon">🏖️</div></div><div class="spot-rank">2</div><div class="spot-cat-label cat-beach">Beach</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Unawatuna Beach</h3>
+          <p class="spot-desc">One of Sri Lanka's most beloved beaches — a sheltered bay with calm turquoise waters, coral reefs, snorkelling, and a lively beachfront with restaurants and dive shops.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★★</span> 4.7 <span class="spot-dist">· 5 km</span></div><a href="#" class="spot-cta">Details →</a></div>
+        </div>
+      </article>
+
+      <article class="spot-card fade-in" data-cat="historical">
+        <div class="spot-img"><div class="spot-img-inner bg-lighthouse"><div class="spot-icon">🔦</div></div><div class="spot-rank">3</div><div class="spot-cat-label cat-historical">Historical</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Galle Lighthouse</h3>
+          <p class="spot-desc">The oldest lighthouse in Sri Lanka standing majestically within the fort walls, offering sweeping views of the ocean and the surrounding colonial ramparts.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★☆</span> 4.3 <span class="spot-dist">· 0.5 km</span></div><a href="#" class="spot-cta">Details →</a></div>
+        </div>
+      </article>
+
+      <article class="spot-card fade-in" data-cat="historical">
+        <div class="spot-img"><div class="spot-img-inner bg-dutch"><div class="spot-icon">🏛️</div></div><div class="spot-rank">4</div><div class="spot-cat-label cat-historical">Historical</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Dutch Reformed Church</h3>
+          <p class="spot-desc">Built in 1755, one of the oldest Protestant churches in Sri Lanka, now beautifully restored and housing fascinating tombstones and artefacts from the colonial era.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★☆</span> 4.1 <span class="spot-dist">· 0.3 km</span></div><a href="#" class="spot-cta">Details →</a></div>
+        </div>
+      </article>
+
+      <article class="spot-card fade-in" data-cat="nature">
+        <div class="spot-img"><div class="spot-img-inner bg-jungle"><div class="spot-icon">🌿</div></div><div class="spot-rank">5</div><div class="spot-cat-label cat-nature">Nature</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Kanneliya Rainforest</h3>
+          <p class="spot-desc">A biodiversity hotspot and UNESCO Biosphere Reserve offering trekking trails through lush primary rainforest, with exotic flora, fauna, streams, and waterfalls.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★☆</span> 4.4 <span class="spot-dist">· 23 km</span></div><a href="#" class="spot-cta">Details →</a></div>
+        </div>
+      </article>
+
+      <article class="spot-card fade-in" data-cat="beach">
+        <div class="spot-img"><div class="spot-img-inner bg-turtle"><div class="spot-icon">🐢</div></div><div class="spot-rank">6</div><div class="spot-cat-label cat-beach">Beach</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Kosgoda Turtle Hatchery</h3>
+          <p class="spot-desc">An important conservation project on a pristine beach where you can watch sea turtle nesting and hatchlings entering the ocean for the very first time.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★☆</span> 4.5 <span class="spot-dist">· 20 km</span></div><a href="#" class="spot-cta">Details →</a></div>
+        </div>
+      </article>
+
+      <article class="spot-card fade-in" data-cat="nature">
+        <div class="spot-img"><div class="spot-img-inner bg-whale"><div class="spot-icon">🐋</div></div><div class="spot-rank">7</div><div class="spot-cat-label cat-nature">Nature</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Mirissa Whale Watching</h3>
+          <p class="spot-desc">Head out to the deep blue for one of the world's premier whale-watching experiences, encountering blue whales and sperm whales in their natural habitat.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★★</span> 4.6 <span class="spot-dist">· 24 km</span></div><a href="#" class="spot-cta">Details →</a></div>
+        </div>
+      </article>
+
+      <article class="spot-card fade-in" data-cat="religious">
+        <div class="spot-img"><div class="spot-img-inner bg-temple"><div class="spot-icon">🛕</div></div><div class="spot-rank">8</div><div class="spot-cat-label cat-religious">Religious</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Sri Sudharmalaya Temple</h3>
+          <p class="spot-desc">A beautifully decorated Buddhist temple within the fort district, housing intricate murals and a serene atmosphere for a tranquil spiritual experience.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★☆</span> 4.2 <span class="spot-dist">· 0.8 km</span></div><a href="#" class="spot-cta">Details →</a></div>
+        </div>
+      </article>
+
+      <article class="spot-card fade-in" data-cat="religious">
+        <div class="spot-img"><div class="spot-img-inner bg-mosque"><div class="spot-icon">🕌</div></div><div class="spot-rank">9</div><div class="spot-cat-label cat-religious">Religious</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Meeran Jumma Mosque</h3>
+          <p class="spot-desc">A magnificent Moorish-style mosque within the fort, reflecting Galle's diverse religious heritage with beautiful architecture and a welcoming community.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★☆</span> 4.0 <span class="spot-dist">· 0.4 km</span></div><a href="#" class="spot-cta">Details →</a></div>
+        </div>
+      </article>
+
+      <article class="spot-card fade-in" data-cat="beach">
+        <div class="spot-img"><div class="spot-img-inner bg-surf"><div class="spot-icon">🏄</div></div><div class="spot-rank">10</div><div class="spot-cat-label cat-beach">Beach</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Midigama Surf Beach</h3>
+          <p class="spot-desc">A popular surfing destination with consistent reef breaks suitable for all levels, set against a backdrop of palm-fringed coastline and crystal-clear waters.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★☆</span> 4.2 <span class="spot-dist">· 18 km</span></div><a href="#" class="spot-cta">Details →</a></div>
+        </div>
+      </article>
+
+      <article class="spot-card fade-in" data-cat="dining">
+        <div class="spot-img"><div class="spot-img-inner bg-market"><div class="spot-icon">🍛</div></div><div class="spot-rank">11</div><div class="spot-cat-label cat-dining">Dining</div></div>
+        <div class="spot-body">
+          <h3 class="spot-name">Galle Fort Café District</h3>
+          <p class="spot-desc">The cobblestone streets inside the fort are lined with eclectic cafés, rooftop restaurants, and eateries serving fresh seafood and traditional Sri Lankan cuisine.</p>
+          <div class="spot-footer"><div class="spot-rating"><span class="stars">★★★★★</span> 4.6 <span class="spot-dist">· 0.2 km</span></div><a href="#" class="spot-cta">Details →</a></div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- RESULTS COUNT -->
+    <p style="text-align:center;margin-top:28px;font-size:.83rem;color:var(--clr-muted);" id="results-count">Showing 11 attractions</p>
+
+    <!-- MAP LINK CTA -->
+    <div style="background:var(--clr-primary);border-radius:12px;padding:32px;text-align:center;margin-top:40px;" class="fade-in">
+      <div style="font-size:2rem;margin-bottom:10px;">🗺️</div>
+      <h3 style="font-family:var(--font-display);color:var(--clr-white);margin-bottom:8px;">See all attractions on the map</h3>
+      <p style="color:rgba(255,255,255,.6);font-size:.9rem;margin-bottom:20px;">View interactive map with attraction markers, route from Colombo, and navigation guidance.</p>
+      <a href="navigation.html" class="btn btn-primary">Open Map View →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand"><div class="site-logo"><span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span></div><p>Your comprehensive travel guide for Galle, Sri Lanka.</p></div>
+    <div class="footer-col"><h4>Explore</h4><ul><li><a href="attractions.html">All Attractions</a></li><li><a href="navigation.html">Map View</a></li><li><a href="itinerary.html">Itinerary</a></li></ul></div>
+    <div class="footer-col"><h4>Plan Trip</h4><ul><li><a href="navigation.html">Getting to Galle</a></li><li><a href="feedback.html">Feedback</a></li></ul></div>
+    <div class="footer-col"><h4>About</h4><ul><li><a href="index.html">Home</a></li><li><a href="#">Privacy</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Visit Galle · ITE2953 · E2328015</span><span>Galle, Sri Lanka</span></div>
+  <div class="disclaimer">All attraction information is for guidance only. Visit Galle does not facilitate bookings or payments.</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<script src="shared.js"></script>
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.spot-card');
+  const countEl = document.getElementById('results-count');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = btn.dataset.cat;
+      let visible = 0;
+      cards.forEach(card => {
+        const show = cat === 'all' || card.dataset.cat === cat;
+        card.style.display = show ? 'flex' : 'none';
+        if (show) visible++;
+      });
+      countEl.textContent = `Showing ${visible} attraction${visible !== 1 ? 's' : ''}`;
+    });
+  });
+</script>
+</body>
+</html>
