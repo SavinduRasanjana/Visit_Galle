@@ -1,2 +1,2 @@
 # Visit_Galle
-Visiti Galle web for tourism
+Visit Galle website to increase tourism promotion 
