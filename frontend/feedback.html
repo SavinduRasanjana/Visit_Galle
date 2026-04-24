@@ -4,54 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Feedback – Visit Galle</title>
-  <meta name="description" content="Share your travel experience in Galle, Sri Lanka. Submit feedback to help future visitors plan their perfect trip.">
+  <meta name="description" content="Share your travel experience in Galle, Sri Lanka.">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
     .fb-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
-    .star-rating { display: flex; gap: 6px; margin-bottom: 4px; }
+
+    /* Star rating — row-reverse trick for CSS-only hover */
+    .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 4px; margin-bottom: 4px; }
     .star-rating input { display: none; }
-    .star-rating label {
-      font-size: 1.8rem; cursor: pointer; color: #d1d5db;
-      transition: color var(--transition); line-height: 1;
-    }
+    .star-rating label { font-size: 1.9rem; cursor: pointer; color: #d1d5db; transition: color .15s; line-height: 1; }
     .star-rating label:hover,
     .star-rating label:hover ~ label,
-    .star-rating input:checked ~ label { color: #d1d5db; }
-    .star-rating input:checked + label,
-    .star-rating label:hover { color: #f59e0b; }
-    /* Sibling approach */
-    .star-rating { flex-direction: row-reverse; justify-content: flex-end; }
-    .star-rating label:hover,
-    .star-rating label:hover ~ label { color: #f59e0b; }
     .star-rating input:checked ~ label { color: #f59e0b; }
 
-    .faq-section { margin-top: 48px; }
+    /* Stats bar */
+    .stats-bar { background: var(--clr-primary); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; text-align: center; }
+    .stat-val { display: block; font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--clr-accent-lt); }
+    .stat-lbl { font-size: .72rem; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Dynamic reviews */
+    .review-card { background: var(--clr-bg); border-radius: var(--radius-md); padding: 16px 18px; border-left: 3px solid var(--clr-accent-lt); margin-bottom: 12px; }
+    .rc-stars { color: #f59e0b; font-size: .85rem; margin-bottom: 6px; }
+    .rc-text  { font-size: .84rem; color: var(--clr-muted); line-height: 1.55; font-style: italic; }
+    .rc-author{ font-size: .74rem; font-weight: 600; color: var(--clr-primary); margin-top: 8px; }
+    .rc-attraction { font-size: .7rem; color: var(--clr-muted); }
+    .reviews-loading { text-align: center; color: var(--clr-muted); font-size: .85rem; padding: 20px; }
+    .load-more { width: 100%; margin-top: 10px; }
+
+    /* Success banner */
+    .success-banner { display: none; background: #dcfce7; border: 1px solid #86efac; border-radius: var(--radius-md); padding: 16px 20px; font-size: .88rem; color: #166534; font-weight: 500; margin-bottom: 20px; align-items: center; gap: 10px; }
+    .success-banner.show { display: flex; }
+    .error-banner { display: none; background: #fee2e2; border: 1px solid #fca5a5; border-radius: var(--radius-md); padding: 14px 18px; font-size: .84rem; color: #991b1b; margin-bottom: 16px; }
+    .error-banner.show { display: block; }
+
+    .char-count { font-size: .72rem; color: var(--clr-muted); text-align: right; margin-top: 3px; }
+
+    /* FAQ */
     .faq-item { border-bottom: 1px solid var(--clr-border); }
-    .faq-q {
-      width: 100%; text-align: left; padding: 16px 0;
-      background: none; border: none; cursor: pointer;
-      font-size: .92rem; font-weight: 600; color: var(--clr-text);
-      display: flex; justify-content: space-between; align-items: center; gap: 12px;
-      transition: color var(--transition);
-    }
+    .faq-q { width: 100%; text-align: left; padding: 16px 0; background: none; border: none; cursor: pointer; font-size: .91rem; font-weight: 600; color: var(--clr-text); display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: color var(--transition); }
     .faq-q:hover { color: var(--clr-primary); }
-    .faq-q .chevron { font-size: .75rem; transition: transform var(--transition); }
+    .faq-q .chevron { font-size: .75rem; transition: transform var(--transition); flex-shrink: 0; }
     .faq-a { display: none; font-size: .86rem; color: var(--clr-muted); line-height: 1.7; padding-bottom: 16px; }
     .faq-item.open .faq-a { display: block; }
     .faq-item.open .chevron { transform: rotate(180deg); }
     .faq-item.open .faq-q { color: var(--clr-primary); }
 
-    .char-count { font-size: .72rem; color: var(--clr-muted); text-align: right; margin-top: 3px; }
-    .success-banner {
-      display: none; background: #dcfce7; border: 1px solid #86efac;
-      border-radius: var(--radius-md); padding: 16px 20px;
-      font-size: .88rem; color: #166534; font-weight: 500;
-      margin-bottom: 20px;
-    }
-    .success-banner.show { display: flex; align-items: center; gap: 10px; }
-
-    @media(max-width:960px) { .fb-layout { grid-template-columns: 1fr; } }
+    @media(max-width:960px) { .fb-layout { grid-template-columns: 1fr; } .stats-bar { grid-template-columns: repeat(3,1fr); } }
+    @media(max-width:500px)  { .stats-bar { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -84,17 +84,19 @@
   <div class="page-wrap">
     <div class="fb-layout">
 
-      <!-- LEFT: FORM -->
+      <!-- ── LEFT: FORM ── -->
       <div class="fade-in">
         <div class="eyebrow">Leave a Review</div>
         <h2 class="section-title" style="margin-bottom:8px;">Tell Us About Your Visit</h2>
         <div class="divider" style="margin-bottom:28px;"></div>
 
         <div class="success-banner" id="success-banner">
-          ✅ Thank you! Your feedback has been submitted successfully and will be reviewed shortly.
+          ✅ Thank you! Your feedback has been submitted and will be reviewed shortly.
         </div>
+        <div class="error-banner" id="error-banner"></div>
 
         <form class="form-stack" id="feedback-form" novalidate>
+
           <div class="form-row">
             <div class="form-group">
               <label for="name">Full Name <span style="color:red">*</span></label>
@@ -134,7 +136,7 @@
           <!-- Star Rating -->
           <div class="form-group">
             <label>Overall Rating <span style="color:red">*</span></label>
-            <div class="star-rating" id="star-rating">
+            <div class="star-rating" id="star-widget">
               <input type="radio" id="s5" name="rating" value="5"><label for="s5" title="Excellent">★</label>
               <input type="radio" id="s4" name="rating" value="4"><label for="s4" title="Very Good">★</label>
               <input type="radio" id="s3" name="rating" value="3"><label for="s3" title="Good">★</label>
@@ -153,82 +155,71 @@
               <option>Family with children</option>
               <option>Group of friends</option>
               <option>Student / Backpacker</option>
-              <option>Business trip</option>
             </select>
           </div>
 
           <div class="form-group">
             <label for="message">Your Message <span style="color:red">*</span></label>
-            <textarea id="message" placeholder="Share your experience — what did you enjoy? Any tips for future visitors? How was the transport?" required maxlength="1000" rows="5"></textarea>
-            <div class="char-count"><span id="char-count">0</span>/1000 characters</div>
+            <textarea id="message" placeholder="Share your experience — what did you enjoy? Any tips for future visitors?" required maxlength="1000" rows="5"></textarea>
+            <div class="char-count"><span id="char-count">0</span>/1000</div>
           </div>
 
-          <p class="form-note">* Required fields. Your feedback will be reviewed before publishing. Your email will not be shared publicly.</p>
+          <p class="form-note">* Required fields. Your feedback is reviewed before publishing. Email is never shown publicly.</p>
 
           <div class="form-submit" style="gap:12px;">
-            <button type="button" onclick="resetForm()" class="btn btn-outline" style="padding:12px 22px;">Clear</button>
-            <button type="submit" class="btn btn-dark" style="padding:12px 28px;">Submit Feedback →</button>
+            <button type="button" onclick="resetForm()" class="btn btn-outline">Clear</button>
+            <button type="submit" id="submit-btn" class="btn btn-dark">Submit Feedback →</button>
           </div>
         </form>
       </div>
 
-      <!-- RIGHT: REVIEWS + FAQ -->
+      <!-- ── RIGHT: STATS + REVIEWS + FAQ ── -->
       <div class="fade-in">
-        <div class="eyebrow">Recent Reviews</div>
-        <h2 class="section-title" style="margin-bottom:8px;">What Visitors Say</h2>
-        <div class="divider" style="margin-bottom:24px;"></div>
 
-        <div class="review-cards">
-          <div class="review-card">
-            <div class="rc-stars">★★★★★</div>
-            <p class="rc-text">"The fort is absolutely magical — we spent the whole morning just wandering the old streets. The train ride from Colombo along the coast was genuinely unforgettable. This website helped me plan everything perfectly!"</p>
-            <div class="rc-author">— Priya S. · Colombo · Galle Dutch Fort</div>
-          </div>
-          <div class="review-card">
-            <div class="rc-stars">★★★★★</div>
-            <p class="rc-text">"Unawatuna was absolutely stunning. Crystal clear water, amazing local food and very easy to reach from the fort by tuk-tuk. A must-do for any visitor to Galle. Highly recommend the snorkelling!"</p>
-            <div class="rc-author">— Thomas W. · Germany · Unawatuna Beach</div>
-          </div>
-          <div class="review-card">
-            <div class="rc-stars">★★★★☆</div>
-            <p class="rc-text">"Perfect one-day trip. The itinerary guide here was spot on — managed to see the fort, the religious sites and still catch the beach before the evening train back. The lighthouse views were spectacular."</p>
-            <div class="rc-author">— Nimal P. · Kandy · Multiple Attractions</div>
-          </div>
-          <div class="review-card">
-            <div class="rc-stars">★★★★★</div>
-            <p class="rc-text">"Went for whale watching in Mirissa and then spent the afternoon in Galle. What a day! The blue whale sighting was once in a lifetime. The fort at sunset was equally breathtaking."</p>
-            <div class="rc-author">— Sarah L. · Australia · Mirissa + Galle Fort</div>
-          </div>
+        <!-- Stats bar — loaded from API -->
+        <div class="stats-bar" id="stats-bar">
+          <div><span class="stat-val" id="stat-total">—</span><span class="stat-lbl">Reviews</span></div>
+          <div><span class="stat-val" id="stat-avg">—</span><span class="stat-lbl">Avg Rating</span></div>
+          <div><span class="stat-val" id="stat-5star">—</span><span class="stat-lbl">5-Star</span></div>
         </div>
 
+        <div class="eyebrow">Recent Reviews</div>
+        <h2 class="section-title" style="font-size:1.3rem;margin-bottom:16px;">What Visitors Say</h2>
+
+        <!-- Dynamic reviews from API -->
+        <div id="reviews-container">
+          <div class="reviews-loading">Loading reviews…</div>
+        </div>
+        <button class="btn btn-outline load-more" id="load-more-btn" onclick="loadReviews(true)" style="display:none;">Load more reviews</button>
+
         <!-- FAQ -->
-        <div class="faq-section">
-          <div class="eyebrow" style="margin-top:36px;">FAQ</div>
-          <h3 class="section-title" style="font-size:1.3rem;margin-bottom:20px;">Common Questions</h3>
+        <div style="margin-top:40px;">
+          <div class="eyebrow">Help & FAQ</div>
+          <h3 style="font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin-bottom:16px;margin-top:6px;">Common Questions</h3>
 
           <div class="faq-item">
             <button class="faq-q" onclick="toggleFaq(this)">Is Galle Fort free to enter? <span class="chevron">▼</span></button>
-            <div class="faq-a">Yes, walking the streets and ramparts of the Galle Fort is free. Individual museums and sites within the fort (such as the Maritime Museum) may charge a small entry fee of LKR 200–500.</div>
+            <div class="faq-a">Yes, walking the streets and ramparts of the Galle Fort is free. Individual museums and sites (such as the Maritime Museum) may charge a small entry fee of LKR 200–500.</div>
           </div>
           <div class="faq-item">
             <button class="faq-q" onclick="toggleFaq(this)">How do I get from Galle Station to the Fort? <span class="chevron">▼</span></button>
-            <div class="faq-a">The Galle Fort is approximately 1 km from the railway station — a pleasant 10–15 minute walk along the waterfront road. Tuk-tuks are also readily available and cost around LKR 100–200 for the short ride.</div>
+            <div class="faq-a">The Galle Fort is approximately 1 km from the station — a pleasant 10–15 minute walk along the waterfront road. Tuk-tuks cost around LKR 100–200 for the short ride.</div>
           </div>
           <div class="faq-item">
             <button class="faq-q" onclick="toggleFaq(this)">Is it safe to swim at Unawatuna Beach? <span class="chevron">▼</span></button>
-            <div class="faq-a">Unawatuna has a sheltered bay which generally makes it one of the safer beaches for swimming in the south. However, always check local conditions before entering the water, especially during the monsoon season (May–September when the southwest monsoon affects the south coast).</div>
+            <div class="faq-a">Unawatuna's sheltered bay makes it generally safer for swimming. Always check local conditions before entering the water, especially during the southwest monsoon (May–September).</div>
           </div>
           <div class="faq-item">
-            <button class="faq-q" onclick="toggleFaq(this)">Can I book transport tickets online? <span class="chevron">▼</span></button>
-            <div class="faq-a">This website does not support ticket booking. Visit Galle is an information guide only. For train tickets, visit the Sri Lanka Railways website or purchase at the station. Bus tickets are typically purchased on board.</div>
+            <button class="faq-q" onclick="toggleFaq(this)">Can I book transport or attractions through this site? <span class="chevron">▼</span></button>
+            <div class="faq-a">No. Visit Galle is an information guide only — no bookings or payments are processed here. Train tickets can be purchased at the station or via Sri Lanka Railways website.</div>
           </div>
           <div class="faq-item">
-            <button class="faq-q" onclick="toggleFaq(this)">What is the best time of year to visit Galle? <span class="chevron">▼</span></button>
-            <div class="faq-a">The best time to visit Galle is from December to April, during the dry season on the south coast. July and August also see calmer weather. The southwest monsoon (May–September) brings rain and rougher seas, though the fort and cultural sites remain accessible.</div>
+            <button class="faq-q" onclick="toggleFaq(this)">Best time of year to visit Galle? <span class="chevron">▼</span></button>
+            <div class="faq-a">The best time is December to April (dry season on the south coast). July–August also sees calm weather. The southwest monsoon (May–September) brings rain and rougher seas.</div>
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
   </div>
 </section>
@@ -237,8 +228,8 @@
 <footer class="site-footer">
   <div class="footer-grid">
     <div class="footer-brand"><div class="site-logo"><span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span></div><p>Your comprehensive travel guide for Galle, Sri Lanka.</p></div>
-    <div class="footer-col"><h4>Explore</h4><ul><li><a href="attractions.html">All Attractions</a></li><li><a href="navigation.html">Map View</a></li><li><a href="itinerary.html">Itinerary</a></li></ul></div>
-    <div class="footer-col"><h4>Plan Trip</h4><ul><li><a href="navigation.html">Getting to Galle</a></li><li><a href="feedback.html">Feedback</a></li></ul></div>
+    <div class="footer-col"><h4>Explore</h4><ul><li><a href="attractions.html">Attractions</a></li><li><a href="navigation.html">Map View</a></li><li><a href="itinerary.html">Itinerary</a></li></ul></div>
+    <div class="footer-col"><h4>Plan Trip</h4><ul><li><a href="navigation.html">Getting Here</a></li><li><a href="feedback.html">Feedback</a></li></ul></div>
     <div class="footer-col"><h4>About</h4><ul><li><a href="index.html">Home</a></li><li><a href="#">Privacy</a></li></ul></div>
   </div>
   <div class="footer-bottom"><span>© 2026 Visit Galle · ITE2953 · E2328015</span></div>
@@ -248,51 +239,189 @@
 <div class="toast" id="toast"></div>
 <script src="shared.js"></script>
 <script>
-  // Star rating labels
-  const ratingLabels = { 5:'Excellent ★★★★★', 4:'Very Good ★★★★☆', 3:'Good ★★★☆☆', 2:'Fair ★★☆☆☆', 1:'Poor ★☆☆☆☆' };
+  // ── CONFIG ─────────────────────────────────────────────────
+  const API = 'visitgalle-production.up.railway.app';
+  const RATING_LABELS = { 5:'Excellent ★★★★★', 4:'Very Good ★★★★☆', 3:'Good ★★★☆☆', 2:'Fair ★★☆☆☆', 1:'Poor ★☆☆☆☆' };
+  let reviewPage = 1;
+  let totalPages  = 1;
+
+  // ── STAR RATING LABEL ───────────────────────────────────────
   document.querySelectorAll('input[name="rating"]').forEach(input => {
     input.addEventListener('change', () => {
-      document.getElementById('rating-label').textContent = ratingLabels[input.value] || 'Click to rate';
+      document.getElementById('rating-label').textContent = RATING_LABELS[input.value] || 'Click to rate';
     });
   });
 
-  // Char count
-  const msgEl = document.getElementById('message');
+  // ── CHARACTER COUNT ─────────────────────────────────────────
+  const msgEl   = document.getElementById('message');
   const countEl = document.getElementById('char-count');
   msgEl.addEventListener('input', () => { countEl.textContent = msgEl.value.length; });
 
-  // Form submit
-  document.getElementById('feedback-form').addEventListener('submit', e => {
+  // ── LOAD STATS FROM API ─────────────────────────────────────
+  async function loadStats() {
+    try {
+      const res  = await fetch(`${API}/feedback/stats`);
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('stat-total').textContent = data.stats.total        || 0;
+        document.getElementById('stat-avg').textContent   = data.stats.avg_rating   || '—';
+        document.getElementById('stat-5star').textContent = data.stats.five_star    || 0;
+      }
+    } catch { /* API not running — stats silently fail */ }
+  }
+
+  // ── LOAD REVIEWS FROM API ───────────────────────────────────
+  async function loadReviews(append = false) {
+    if (!append) { reviewPage = 1; }
+    const container = document.getElementById('reviews-container');
+    const loadBtn   = document.getElementById('load-more-btn');
+
+    if (!append) container.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
+
+    try {
+      const res  = await fetch(`${API}/feedback?page=${reviewPage}&limit=4`);
+      const data = await res.json();
+
+      if (!data.success || !data.data.length) {
+        if (!append) {
+          container.innerHTML = renderSeedReviews(); // fallback seed reviews
+        }
+        loadBtn.style.display = 'none';
+        return;
+      }
+
+      totalPages = data.pagination.pages;
+      if (!append) container.innerHTML = '';
+
+      data.data.forEach(r => {
+        container.insertAdjacentHTML('beforeend', renderReviewCard(r));
+      });
+
+      loadBtn.style.display = reviewPage < totalPages ? 'block' : 'none';
+      reviewPage++;
+
+    } catch {
+      // API offline — show seed/static reviews
+      if (!append) container.innerHTML = renderSeedReviews();
+      loadBtn.style.display = 'none';
+    }
+  }
+
+  function starsHTML(n) {
+    return '★'.repeat(n) + '☆'.repeat(5 - n);
+  }
+
+  function renderReviewCard(r) {
+    const date = r.submitted_at ? new Date(r.submitted_at).toLocaleDateString('en-GB',{year:'numeric',month:'short',day:'numeric'}) : '';
+    return `
+      <div class="review-card">
+        <div class="rc-stars">${starsHTML(r.rating)}</div>
+        <p class="rc-text">"${r.message}"</p>
+        <div class="rc-author">— ${r.name}
+          ${r.attraction ? `<span class="rc-attraction"> · ${r.attraction}</span>` : ''}
+          ${date ? `<span class="rc-attraction"> · ${date}</span>` : ''}
+        </div>
+      </div>`;
+  }
+
+  // Fallback static reviews (shown when API is offline)
+  function renderSeedReviews() {
+    const seeds = [
+      { name:'Priya Seneviratne', rating:5, message:'The fort is absolutely magical — we spent the whole morning wandering the old streets. The train ride from Colombo along the coast was unforgettable!', attraction:'Galle Dutch Fort' },
+      { name:'Thomas Weber',      rating:5, message:'Unawatuna was stunning! Crystal clear water, amazing local food, very easy to reach from the fort. Highly recommend the snorkelling!', attraction:'Unawatuna Beach' },
+      { name:'Nimal Perera',      rating:4, message:'Perfect one-day trip. The itinerary guide here was spot on — managed to see the fort, religious sites and still catch the beach before the evening train.', attraction:'Multiple Attractions' },
+      { name:'Sarah Livingston',  rating:5, message:'Went whale watching in Mirissa then spent the afternoon in Galle. The blue whale sighting was once in a lifetime. The fort at sunset was equally breathtaking.', attraction:'Mirissa Whale Watching' },
+    ];
+    return seeds.map(r => renderReviewCard(r)).join('');
+  }
+
+  // ── FORM SUBMIT → POST to API ───────────────────────────────
+  document.getElementById('feedback-form').addEventListener('submit', async e => {
     e.preventDefault();
-    const name  = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const msg   = document.getElementById('message').value.trim();
-    const rating= document.querySelector('input[name="rating"]:checked');
-    if (!name || !email || !msg || !rating) {
-      showToast('⚠ Please fill in all required fields and select a rating.');
+
+    const errorEl   = document.getElementById('error-banner');
+    const successEl = document.getElementById('success-banner');
+    const submitBtn = document.getElementById('submit-btn');
+
+    errorEl.classList.remove('show');
+    successEl.classList.remove('show');
+
+    const name       = document.getElementById('name').value.trim();
+    const email      = document.getElementById('email').value.trim();
+    const message    = document.getElementById('message').value.trim();
+    const ratingEl   = document.querySelector('input[name="rating"]:checked');
+    const attraction = document.getElementById('attraction').value;
+    const visit_date = document.getElementById('visit-date').value;
+    const visit_type = document.getElementById('visit-type').value;
+
+    // Client-side pre-validation (REQ-F-13)
+    const clientErrors = [];
+    if (!name || name.length < 2)      clientErrors.push('Please enter your full name.');
+    if (!email || !email.includes('@')) clientErrors.push('Please enter a valid email address.');
+    if (!ratingEl)                     clientErrors.push('Please select a star rating.');
+    if (!message || message.length < 10) clientErrors.push('Please write at least 10 characters in your message.');
+
+    if (clientErrors.length) {
+      errorEl.innerHTML = clientErrors.map(e => `• ${e}`).join('<br>');
+      errorEl.classList.add('show');
+      errorEl.scrollIntoView({ behavior:'smooth', block:'center' });
       return;
     }
-    document.getElementById('success-banner').classList.add('show');
-    document.getElementById('feedback-form').reset();
-    countEl.textContent = '0';
-    document.getElementById('rating-label').textContent = 'Click to rate';
-    document.getElementById('success-banner').scrollIntoView({ behavior:'smooth', block:'center' });
+
+    submitBtn.textContent = 'Submitting…';
+    submitBtn.disabled = true;
+
+    try {
+      const res  = await fetch(`${API}/feedback`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ name, email, attraction, visit_date, visit_type, rating: ratingEl.value, message })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        successEl.classList.add('show');
+        document.getElementById('feedback-form').reset();
+        countEl.textContent = '0';
+        document.getElementById('rating-label').textContent = 'Click to rate';
+        successEl.scrollIntoView({ behavior:'smooth', block:'center' });
+        // Refresh reviews & stats
+        loadReviews();
+        loadStats();
+      } else {
+        const msgs = data.errors ? data.errors.join('<br>• ') : data.error || 'Submission failed.';
+        errorEl.innerHTML = '• ' + msgs;
+        errorEl.classList.add('show');
+      }
+
+    } catch {
+      errorEl.innerHTML = '• Could not reach the server. Please check your connection and try again.';
+      errorEl.classList.add('show');
+    } finally {
+      submitBtn.textContent = 'Submit Feedback →';
+      submitBtn.disabled = false;
+    }
   });
 
   function resetForm() {
     document.getElementById('feedback-form').reset();
     countEl.textContent = '0';
     document.getElementById('rating-label').textContent = 'Click to rate';
+    document.getElementById('error-banner').classList.remove('show');
     document.getElementById('success-banner').classList.remove('show');
   }
 
-  // FAQ accordion
+  // ── FAQ ACCORDION ───────────────────────────────────────────
   function toggleFaq(btn) {
-    const item = btn.parentElement;
+    const item   = btn.parentElement;
     const isOpen = item.classList.contains('open');
     document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
     if (!isOpen) item.classList.add('open');
   }
+
+  // ── INIT ────────────────────────────────────────────────────
+  loadStats();
+  loadReviews();
 </script>
 </body>
 </html>
