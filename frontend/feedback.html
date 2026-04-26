@@ -259,7 +259,7 @@
   // ── LOAD STATS FROM API ─────────────────────────────────────
   async function loadStats() {
     try {
-      const res  = await fetch(`${API}/feedback/stats`);
+      const res  = await fetch(`${API}/feedback/stats`, { cache: 'no-store' });
       const data = await res.json();
       if (data.success) {
         document.getElementById('stat-total').textContent = data.stats.total        || 0;
@@ -278,7 +278,7 @@
     if (!append) container.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
 
     try {
-      const res  = await fetch(`${API}/feedback?page=${reviewPage}&limit=4`);
+      const res  = await fetch(`${API}/feedback?page=${reviewPage}&limit=4`, { cache: 'no-store' });
       const data = await res.json();
 
       if (!data.success || !data.data.length) {
