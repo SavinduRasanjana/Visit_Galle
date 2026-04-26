@@ -259,8 +259,7 @@
   // ── LOAD STATS FROM API ─────────────────────────────────────
   async function loadStats() {
     try {
-      // Append a timestamp to completely bypass browser and CDN caching
-      const res = await fetch(`${API}/feedback/stats?_t=${new Date().getTime()}`);
+      const res  = await fetch(`${API}/feedback/stats`, { cache: 'no-store' });
       const data = await res.json();
       if (data.success) {
         document.getElementById('stat-total').textContent = data.stats.total        || 0;
@@ -279,21 +278,16 @@
     if (!append) container.innerHTML = '<div class="reviews-loading">Loading reviews…</div>';
 
     try {
-      // Add the timestamp to the query parameters
-      const res = await fetch(`${API}/feedback?page=${reviewPage}&limit=4&_t=${Date.now()}`, {
-        cache: "no-store"
-      });
+      
       const data = await res.json();
 
-      if (!data.success) {
-       container.innerHTML = '<div class="reviews-loading">Error loading reviews</div>';
-      return;
+      if (!data.success || !data.data.length) {
+        if (!append) {
+          container.innerHTML = renderSeedReviews(); // fallback seed reviews
+        }
+        loadBtn.style.display = 'none';
+        return;
       }
-
-      if (!data.data || data.data.length === 0) {
-       container.innerHTML = '<div class="reviews-loading">No reviews yet</div>';
-      return;
-}
 
       totalPages = data.pagination.pages;
       if (!append) container.innerHTML = '';
@@ -425,10 +419,8 @@
   }
 
   // ── INIT ────────────────────────────────────────────────────
-  setTimeout(() => {
-  loadReviews();
   loadStats();
-}, 500);
+  loadReviews();
 </script>
 </body>
 </html>
