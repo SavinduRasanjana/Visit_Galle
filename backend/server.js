@@ -336,7 +336,7 @@ app.post('/api/auth/login', async (req, res) => {
     await db.execute('UPDATE users SET last_login = NOW() WHERE id = ?', [user.id]);
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
-    const safeUser = { id: user.id, name: user.name, email: user.email };
+    const safeUser = { id: user.id, name: user.name, email: user.email, role: user.role };
 
     return res.json({ success: true, token, user: safeUser });
 
@@ -359,7 +359,7 @@ app.get('/api/auth/me', async (req, res) => {
 
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET);
-    const [rows] = await db.execute('SELECT id, name, email, created_at FROM users WHERE id = ?', [decoded.userId]);
+    const [rows] = await db.execute('SELECT id, name, email, role, created_at FROM users WHERE id = ?', [decoded.userId]);
 
     if (!rows.length) return res.status(404).json({ success: false, error: 'User not found.' });
 
