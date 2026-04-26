@@ -1,6 +1,7 @@
 /* shared.js — Visit Galle common utilities */
+
 // ── SINGLE API SOURCE OF TRUTH ────────────────────────────────
-const API = window.VGALLE_API || 'https://visitgalle-production.up.railway.app/api';
+const API = window.VGALLE_API || 'https://visitgalle-production-3491.up.railway.app/api';
 window.API = API;
 
 // ── AUTH HELPERS ──────────────────────────────────────────────
