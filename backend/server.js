@@ -138,8 +138,8 @@ app.post('/api/feedback', async (req, res) => {
 
     const [result] = await db.execute(
       `INSERT INTO feedback
-         (name, email, attraction, visit_date, visit_type, rating, message, ip_hash)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+         (name, email, attraction, visit_date, visit_type, rating, message, ip_hash, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'approved')`,
       [cleanName, cleanEmail, cleanAttraction, cleanDate, cleanVisitType, cleanRating, cleanMessage, ipHash]
     );
 
