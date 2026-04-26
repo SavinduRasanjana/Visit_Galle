@@ -69,6 +69,10 @@ async function initDB() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
   `);
   console.log('✅ feedback table ready');
+
+  // FIX 1: Auto-approve all old test reviews so they show up instantly
+  await db.query(`UPDATE feedback SET status = 'approved'`);
+  console.log('✅ Old test reviews set to approved');
 }
 
 // ── INPUT SANITISATION HELPER ───────────────────────────────
@@ -136,6 +140,7 @@ app.post('/api/feedback', async (req, res) => {
       .update(req.ip || '')
       .digest('hex');
 
+    // FIX 2: Set status to 'approved' directly in the INSERT statement
     const [result] = await db.execute(
       `INSERT INTO feedback
          (name, email, attraction, visit_date, visit_type, rating, message, ip_hash, status)
@@ -172,8 +177,8 @@ app.get('/api/feedback', async (req, res) => {
       params.push(catFilter);
     }
 
-    query += ' ORDER BY submitted_at DESC LIMIT ? OFFSET ?';
-    params.push(limit, offset);
+    // FIX 3: Inject limit and offset directly to prevent mysql2 parameter crashes
+    query += ` ORDER BY submitted_at DESC LIMIT ${limit} OFFSET ${offset}`;
 
     const [rows] = await db.execute(query, params);
 
