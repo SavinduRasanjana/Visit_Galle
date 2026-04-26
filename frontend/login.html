@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In – Visit Galle</title>
+  <meta name="description" content="Sign in or create an account on Visit Galle.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { padding-top: 0; background: var(--clr-primary); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── AUTH LAYOUT ── */
+    .auth-page {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── LEFT PANEL – decorative ── */
+    .auth-panel {
+      position: relative;
+      background: linear-gradient(160deg, #0d1f36 0%, #1B365D 50%, #224070 80%, #B8974A 180%);
+      display: flex; align-items: flex-end;
+      padding: 60px 52px;
+      overflow: hidden;
+    }
+    .auth-panel::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 30% 65%, rgba(184,151,74,.18) 0%, transparent 50%),
+        radial-gradient(circle at 75% 25%, rgba(255,255,255,.05) 0%, transparent 40%);
+    }
+    .panel-grid {
+      position: absolute; inset: 0; opacity: .04;
+      background-image: linear-gradient(var(--clr-white) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--clr-white) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .panel-content { position: relative; z-index: 2; }
+    .panel-logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--clr-white);
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 40px;
+      position: absolute; top: 40px; left: 52px; z-index: 2;
+    }
+    .panel-logo .logo-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--clr-accent); display: inline-block;
+    }
+    .panel-logo .logo-accent { color: var(--clr-accent-lt); }
+    .panel-quote {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      color: var(--clr-white); line-height: 1.3;
+      margin-bottom: 18px;
+    }
+    .panel-quote em { font-style: normal; color: var(--clr-accent-lt); }
+    .panel-sub {
+      font-size: .92rem; color: rgba(255,255,255,.55);
+      line-height: 1.65; max-width: 340px;
+    }
+    .panel-stats {
+      display: flex; gap: 28px; margin-top: 32px;
+    }
+    .pstat { text-align: left; }
+    .pstat strong { display: block; font-size: 1.4rem; color: var(--clr-accent-lt); font-family: var(--font-display); }
+    .pstat span { font-size: .75rem; color: rgba(255,255,255,.45); text-transform: uppercase; letter-spacing: 1.5px; }
+
+    /* Fort silhouette */
+    .panel-svg {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      opacity: .12; pointer-events: none;
+    }
+
+    /* ── RIGHT PANEL – form ── */
+    .auth-form-side {
+      background: var(--clr-white);
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 48px;
+    }
+    .auth-box { width: 100%; max-width: 420px; }
+
+    /* Tabs */
+    .auth-tabs {
+      display: flex; border-bottom: 2px solid var(--clr-border);
+      margin-bottom: 36px;
+    }
+    .auth-tab {
+      flex: 1; padding: 12px 0;
+      background: none; border: none;
+      font-family: var(--font-body); font-size: .95rem; font-weight: 600;
+      color: var(--clr-muted); cursor: pointer;
+      border-bottom: 2px solid transparent; margin-bottom: -2px;
+      transition: all var(--transition);
+    }
+    .auth-tab.active {
+      color: var(--clr-primary);
+      border-bottom-color: var(--clr-accent);
+    }
+    .auth-tab:hover:not(.active) { color: var(--clr-text); }
+
+    /* Form panels */
+    .auth-pane { display: none; }
+    .auth-pane.active { display: block; }
+
+    .auth-heading { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; color: var(--clr-text); margin-bottom: 6px; }
+    .auth-sub { font-size: .9rem; color: var(--clr-muted); margin-bottom: 30px; }
+
+    /* Fields */
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block; font-size: .8rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: var(--clr-text); margin-bottom: 7px;
+    }
+    .field input {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid var(--clr-border);
+      border-radius: var(--radius-md);
+      font-size: .95rem; color: var(--clr-text);
+      background: var(--clr-bg);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+    .field input:focus {
+      border-color: var(--clr-primary);
+      box-shadow: 0 0 0 3px rgba(27,54,93,.1);
+      background: var(--clr-white);
+    }
+    .field input.error { border-color: #e53e3e; }
+    .field-error { font-size: .78rem; color: #e53e3e; margin-top: 5px; display: none; }
+    .field-error.show { display: block; }
+
+    /* Password wrapper */
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 44px; }
+    .pw-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: var(--clr-muted); font-size: 1rem; padding: 4px;
+    }
+    .pw-toggle:hover { color: var(--clr-text); }
+
+    /* Password strength */
+    .pw-strength { margin-top: 8px; }
+    .pw-strength-bar {
+      height: 3px; border-radius: 2px;
+      background: var(--clr-border); overflow: hidden; margin-bottom: 4px;
+    }
+    .pw-strength-fill {
+      height: 100%; width: 0; border-radius: 2px;
+      transition: width .3s, background .3s;
+    }
+    .pw-strength-label { font-size: .73rem; color: var(--clr-muted); }
+
+    /* Forgot link */
+    .forgot-wrap { text-align: right; margin-top: -12px; margin-bottom: 20px; }
+    .forgot-link { font-size: .82rem; color: var(--clr-primary); font-weight: 500; }
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* Submit button */
+    .btn-auth {
+      width: 100%; padding: 13px;
+      background: var(--clr-primary); color: var(--clr-white);
+      border: none; border-radius: var(--radius-md);
+      font-family: var(--font-body); font-size: .95rem; font-weight: 600;
+      cursor: pointer; transition: all var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-auth:hover { background: var(--clr-primary-dk); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .btn-auth:disabled { opacity: .6; transform: none; cursor: not-allowed; }
+    .btn-auth .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+    .btn-auth.loading .spinner { display: block; }
+    .btn-auth.loading .btn-text { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Alert */
+    .auth-alert {
+      padding: 11px 14px; border-radius: var(--radius-md);
+      font-size: .88rem; margin-bottom: 18px;
+      display: none;
+    }
+    .auth-alert.show { display: flex; align-items: flex-start; gap: 8px; }
+    .auth-alert.error { background: #fff5f5; border: 1px solid #fed7d7; color: #c53030; }
+    .auth-alert.success { background: #f0fff4; border: 1px solid #9ae6b4; color: #276749; }
+
+    /* Divider */
+    .or-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 22px 0; color: var(--clr-muted); font-size: .82rem;
+    }
+    .or-divider::before, .or-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--clr-border);
+    }
+
+    /* Switch text */
+    .auth-switch { text-align: center; margin-top: 24px; font-size: .88rem; color: var(--clr-muted); }
+    .auth-switch a { color: var(--clr-primary); font-weight: 600; }
+    .auth-switch a:hover { text-decoration: underline; }
+
+    /* Terms */
+    .terms-note { font-size: .76rem; color: var(--clr-muted); text-align: center; margin-top: 18px; line-height: 1.5; }
+    .terms-note a { color: var(--clr-primary); }
+
+    /* Success state */
+    .auth-success {
+      text-align: center; padding: 32px 0;
+      display: none;
+    }
+    .auth-success.show { display: block; }
+    .success-icon { font-size: 3rem; margin-bottom: 16px; }
+    .success-title { font-family: var(--font-display); font-size: 1.5rem; color: var(--clr-text); margin-bottom: 10px; }
+    .success-msg { color: var(--clr-muted); font-size: .92rem; margin-bottom: 24px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .auth-page { grid-template-columns: 1fr; }
+      .auth-panel { display: none; }
+      .auth-form-side { padding: 40px 24px; min-height: 100vh; }
+      .auth-box { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- LEFT: decorative panel -->
+  <div class="auth-panel">
+    <div class="panel-grid"></div>
+    <svg class="panel-svg" viewBox="0 0 1200 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,220 L0,160 L30,160 L30,140 L50,140 L50,120 L70,120 L70,110 L90,110 L90,130 L110,130 L110,150 L140,150 L140,100 L160,100 L160,85 L180,85 L180,65 L200,65 L200,85 L220,85 L220,100 L260,100 L260,90 L280,90 L280,70 L300,70 L300,50 L320,50 L320,70 L340,70 L340,90 L380,90 L380,110 L400,110 L400,90 L420,90 L420,80 L460,80 L460,100 L480,100 L480,120 L500,120 L500,130 L530,130 L530,110 L560,110 L560,95 L580,95 L580,75 L600,75 L600,60 L620,60 L620,45 L640,45 L640,60 L660,60 L660,75 L680,75 L680,95 L700,95 L700,110 L730,110 L730,130 L760,130 L760,120 L780,120 L780,100 L800,100 L800,90 L830,90 L830,110 L860,110 L860,130 L900,130 L900,100 L920,100 L920,80 L940,80 L940,65 L960,65 L960,80 L980,80 L980,100 L1010,100 L1010,130 L1040,130 L1040,140 L1060,140 L1060,155 L1090,155 L1090,140 L1110,140 L1110,160 L1140,160 L1140,150 L1160,150 L1160,170 L1200,170 L1200,220 Z" fill="white"/>
+      <rect x="598" y="18" width="20" height="42" fill="white"/>
+      <polygon points="588,18 618,18 612,4 604,4" fill="white"/>
+    </svg>
+    <a href="index.html" class="panel-logo">
+      <span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span>
+    </a>
+    <div class="panel-content">
+      <p class="panel-quote">Where history<br>meets the <em>Indian Ocean</em></p>
+      <p class="panel-sub">Join thousands of visitors who have discovered Galle's UNESCO-listed fort, pristine beaches, and hidden gems along Sri Lanka's southern coast.</p>
+      <div class="panel-stats">
+        <div class="pstat"><strong>25+</strong><span>Attractions</span></div>
+        <div class="pstat"><strong>4.8★</strong><span>Avg Rating</span></div>
+        <div class="pstat"><strong>UNESCO</strong><span>Heritage</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: form -->
+  <div class="auth-form-side">
+    <div class="auth-box">
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Create Account</button>
+      </div>
+
+      <!-- ── LOGIN PANE ── -->
+      <div class="auth-pane active" id="pane-login">
+        <h1 class="auth-heading">Welcome back</h1>
+        <p class="auth-sub">Sign in to save your itinerary and leave reviews.</p>
+
+        <div class="auth-alert error" id="login-alert">
+          <span>⚠</span><span id="login-alert-msg"></span>
+        </div>
+
+        <div class="field">
+          <label for="login-email">Email address</label>
+          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+          <div class="field-error" id="login-email-err">Please enter a valid email.</div>
+        </div>
+
+        <div class="field">
+          <label for="login-password">Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="login-password" placeholder="Your password" autocomplete="current-password">
+            <button class="pw-toggle" type="button" onclick="togglePw('login-password', this)" aria-label="Show password">👁</button>
+          </div>
+          <div class="field-error" id="login-pw-err">Password is required.</div>
+        </div>
+
+        <div class="forgot-wrap">
+          <a href="#" class="forgot-link" onclick="showForgot(event)">Forgot password?</a>
+        </div>
+
+        <button class="btn-auth" id="btn-login" onclick="handleLogin()">
+          <div class="spinner"></div>
+          <span class="btn-text">Sign In</span>
+        </button>
+
+        <div class="terms-note" style="margin-top:16px;">
+          By signing in you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        </div>
+      </div>
+
+      <!-- ── REGISTER PANE ── -->
+      <div class="auth-pane" id="pane-register">
+        <h1 class="auth-heading">Join Visit Galle</h1>
+        <p class="auth-sub">Create a free account to save your plans and share reviews.</p>
+
+        <div class="auth-alert error" id="reg-alert">
+          <span>⚠</span><span id="reg-alert-msg"></span>
+        </div>
+
+        <div id="reg-success" class="auth-success">
+          <div class="success-icon">🎉</div>
+          <div class="success-title">Account created!</div>
+          <div class="success-msg">Welcome to Visit Galle. You're now signed in.</div>
+          <a href="index.html" class="btn btn-dark">Explore Galle →</a>
+        </div>
+
+        <div id="reg-form">
+          <div class="field">
+            <label for="reg-name">Full name</label>
+            <input type="text" id="reg-name" placeholder="Amal Perera" autocomplete="name">
+            <div class="field-error" id="reg-name-err">Name must be at least 2 characters.</div>
+          </div>
+
+          <div class="field">
+            <label for="reg-email">Email address</label>
+            <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email">
+            <div class="field-error" id="reg-email-err">Please enter a valid email.</div>
+          </div>
+
+          <div class="field">
+            <label for="reg-password">Password</label>
+            <div class="pw-wrap">
+              <input type="password" id="reg-password" placeholder="Min. 8 characters" autocomplete="new-password" oninput="checkPwStrength(this.value)">
+              <button class="pw-toggle" type="button" onclick="togglePw('reg-password', this)" aria-label="Show password">👁</button>
+            </div>
+            <div class="pw-strength" id="pw-strength-wrap">
+              <div class="pw-strength-bar"><div class="pw-strength-fill" id="pw-fill"></div></div>
+              <div class="pw-strength-label" id="pw-label"></div>
+            </div>
+            <div class="field-error" id="reg-pw-err">Password must be at least 8 characters.</div>
+          </div>
+
+          <div class="field">
+            <label for="reg-confirm">Confirm password</label>
+            <div class="pw-wrap">
+              <input type="password" id="reg-confirm" placeholder="Repeat password" autocomplete="new-password">
+              <button class="pw-toggle" type="button" onclick="togglePw('reg-confirm', this)" aria-label="Show password">👁</button>
+            </div>
+            <div class="field-error" id="reg-confirm-err">Passwords do not match.</div>
+          </div>
+
+          <button class="btn-auth" id="btn-register" onclick="handleRegister()">
+            <div class="spinner"></div>
+            <span class="btn-text">Create Account</span>
+          </button>
+
+          <div class="terms-note">
+            By registering you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Forgot password modal (simple inline) -->
+<div id="forgot-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:999; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:var(--radius-lg); padding:36px; width:100%; max-width:400px; margin:0 16px; position:relative;">
+    <h2 style="font-family:var(--font-display);font-size:1.4rem;margin-bottom:8px;">Reset Password</h2>
+    <p style="font-size:.88rem;color:var(--clr-muted);margin-bottom:22px;">Enter your email and we'll send a reset link.</p>
+    <div class="field">
+      <label for="forgot-email">Email address</label>
+      <input type="email" id="forgot-email" placeholder="you@example.com">
+    </div>
+    <div class="auth-alert success" id="forgot-alert" style="margin-bottom:12px;">
+      <span>✓</span><span>Reset link sent — check your inbox.</span>
+    </div>
+    <button class="btn-auth" onclick="handleForgot()"><span class="btn-text">Send Reset Link</span></button>
+    <button onclick="closeForgot()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--clr-muted);">×</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="shared.js"></script>
+<script>
+
+  // ── Tab switching ──────────────────────────────────────────
+  function switchTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-pane').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('pane-' + tab).classList.add('active');
+    clearAlerts();
+  }
+  function clearAlerts() {
+    document.querySelectorAll('.auth-alert').forEach(a => a.classList.remove('show'));
+    document.querySelectorAll('.field-error').forEach(e => e.classList.remove('show'));
+    document.querySelectorAll('input').forEach(i => i.classList.remove('error'));
+  }
+
+  // ── Password toggle ────────────────────────────────────────
+  function togglePw(id, btn) {
+    const inp = document.getElementById(id);
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    btn.textContent = show ? '🙈' : '👁';
+  }
+
+  // ── Password strength ──────────────────────────────────────
+  function checkPwStrength(val) {
+    const fill = document.getElementById('pw-fill');
+    const label = document.getElementById('pw-label');
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    const pct = (score / 4) * 100;
+    const colors = ['#e53e3e','#dd6b20','#d69e2e','#38a169'];
+    const labels = ['Weak','Fair','Good','Strong'];
+    fill.style.width = pct + '%';
+    fill.style.background = colors[score - 1] || '#e2e8f0';
+    label.textContent = score > 0 ? labels[score - 1] : '';
+    label.style.color = colors[score - 1] || 'var(--clr-muted)';
+  }
+
+  // ── Field validation helpers ───────────────────────────────
+  function fieldErr(id, msg) {
+    const inp = document.getElementById(id);
+    const err = document.getElementById(id + '-err') || document.getElementById(id.replace('-', '-') + '-err');
+    if (inp) inp.classList.add('error');
+    if (err) { err.textContent = msg || err.textContent; err.classList.add('show'); }
+    return false;
+  }
+  function fieldOk(id) {
+    const inp = document.getElementById(id);
+    const errId = id + '-err';
+    if (inp) inp.classList.remove('error');
+    const err = document.getElementById(errId);
+    if (err) err.classList.remove('show');
+    return true;
+  }
+
+  function showAlert(alertId, msgId, msg) {
+    const el = document.getElementById(alertId);
+    const msgEl = document.getElementById(msgId);
+    if (msgEl) msgEl.textContent = msg;
+    if (el) el.classList.add('show');
+  }
+
+  // ── Loading state ──────────────────────────────────────────
+  function setLoading(btnId, on) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = on;
+    btn.classList.toggle('loading', on);
+  }
+
+  // ── LOGIN ──────────────────────────────────────────────────
+  async function handleLogin() {
+    clearAlerts();
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    let valid = true;
+
+    if (!email || !/\S+@\S+\.\S+/.test(email)) valid = fieldErr('login-email');
+    else fieldOk('login-email');
+    if (!password) valid = fieldErr('login-password');
+    else fieldOk('login-password');
+    if (!valid) return;
+
+    setLoading('btn-login', true);
+    try {
+      const res = await fetch(API + '/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (data.success) {
+        authSave(data.token, data.user);
+        showToast('Welcome back, ' + data.user.name + '! 👋');
+        setTimeout(() => { window.location.href = 'index.html'; }, 800);
+      } else {
+        showAlert('login-alert', 'login-alert-msg', data.error || 'Invalid email or password.');
+      }
+    } catch (e) {
+      showAlert('login-alert', 'login-alert-msg', 'Could not connect to server. Please try again.');
+    } finally {
+      setLoading('btn-login', false);
+    }
+  }
+
+  // ── REGISTER ───────────────────────────────────────────────
+  async function handleRegister() {
+    clearAlerts();
+    const name     = document.getElementById('reg-name').value.trim();
+    const email    = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const confirm  = document.getElementById('reg-confirm').value;
+    let valid = true;
+
+    if (!name || name.length < 2) valid = fieldErr('reg-name');
+    else fieldOk('reg-name');
+    if (!email || !/\S+@\S+\.\S+/.test(email)) valid = fieldErr('reg-email');
+    else fieldOk('reg-email');
+    if (!password || password.length < 8) valid = fieldErr('reg-password', 'Password must be at least 8 characters.');
+    else fieldOk('reg-password');
+    if (password !== confirm) valid = fieldErr('reg-confirm', 'Passwords do not match.');
+    else fieldOk('reg-confirm');
+    if (!valid) return;
+
+    setLoading('btn-register', true);
+    try {
+      const res = await fetch(API + '/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+      const data = await res.json();
+      if (data.success) {
+        authSave(data.token, data.user);
+        document.getElementById('reg-form').style.display = 'none';
+        document.getElementById('reg-success').classList.add('show');
+      } else {
+        showAlert('reg-alert', 'reg-alert-msg', data.error || 'Registration failed. Please try again.');
+      }
+    } catch (e) {
+      showAlert('reg-alert', 'reg-alert-msg', 'Could not connect to server. Please try again.');
+    } finally {
+      setLoading('btn-register', false);
+    }
+  }
+
+  // ── FORGOT ─────────────────────────────────────────────────
+  function showForgot(e) { e.preventDefault(); document.getElementById('forgot-overlay').style.display = 'flex'; }
+  function closeForgot() {
+    document.getElementById('forgot-overlay').style.display = 'none';
+    document.getElementById('forgot-alert').classList.remove('show');
+  }
+  async function handleForgot() {
+    const email = document.getElementById('forgot-email').value.trim();
+    if (!email) return;
+    // In a real app, call /api/auth/forgot-password
+    document.getElementById('forgot-alert').classList.add('show');
+  }
+
+  // ── Enter key support ──────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    const activePane = document.querySelector('.auth-pane.active').id;
+    if (activePane === 'pane-login') handleLogin();
+    else handleRegister();
+  });
+
+  // ── Redirect if already logged in ─────────────────────────
+  if (authGetUser()) { window.location.href = 'index.html'; }
+</script>
+</body>
+</html>

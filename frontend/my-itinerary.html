@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Itinerary – Visit Galle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── LAYOUT ── */
+    .plan-wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    .plan-grid {
+      display: grid; grid-template-columns: 1fr 380px;
+      gap: 32px; align-items: start;
+      padding: 40px 0 64px;
+    }
+
+    /* ── SECTION CARD ── */
+    .plan-card {
+      background: var(--clr-white); border-radius: var(--radius-lg);
+      border: 1px solid var(--clr-border); box-shadow: var(--shadow-sm);
+      overflow: hidden; margin-bottom: 24px;
+    }
+    .plan-card-head {
+      padding: 16px 22px; border-bottom: 1px solid var(--clr-border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .plan-card-head h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--clr-text); }
+    .plan-card-body { padding: 22px; }
+
+    /* ── TRIP DETAILS FORM ── */
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field label { display: block; font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--clr-text); margin-bottom: 6px; }
+    .field input, .field select {
+      width: 100%; padding: 10px 12px;
+      border: 1.5px solid var(--clr-border); border-radius: var(--radius-md);
+      font-family: var(--font-body); font-size: .9rem; color: var(--clr-text);
+      background: var(--clr-bg); outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--clr-primary); box-shadow: 0 0 0 3px rgba(27,54,93,.08); background: #fff;
+    }
+
+    /* ── STOP BUILDER ── */
+    .stop-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .stop-row {
+      display: grid; grid-template-columns: 1fr 110px 90px 36px;
+      gap: 8px; align-items: center;
+      background: var(--clr-bg); border-radius: var(--radius-md);
+      padding: 10px 12px; border: 1px solid var(--clr-border);
+      transition: border-color var(--transition);
+    }
+    .stop-row:hover { border-color: var(--clr-primary-lt); }
+    .stop-row select, .stop-row input[type="time"] {
+      width: 100%; padding: 7px 10px;
+      border: 1.5px solid var(--clr-border); border-radius: var(--radius-sm);
+      font-family: var(--font-body); font-size: .85rem; color: var(--clr-text);
+      background: #fff; outline: none;
+    }
+    .stop-row select:focus, .stop-row input[type="time"]:focus {
+      border-color: var(--clr-primary);
+    }
+    .stop-num {
+      display: flex; align-items: center;
+    }
+    .stop-num-badge {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--clr-primary); color: #fff;
+      font-size: .7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-right: 8px; flex-shrink: 0;
+    }
+    .btn-remove-stop {
+      background: none; border: none; color: #fc8181; font-size: 1.1rem;
+      cursor: pointer; border-radius: var(--radius-sm); padding: 4px;
+      transition: background var(--transition);
+    }
+    .btn-remove-stop:hover { background: #fff5f5; }
+    .btn-add-stop {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: 1.5px dashed var(--clr-border);
+      border-radius: var(--radius-md); padding: 10px 16px;
+      font-family: var(--font-body); font-size: .88rem; color: var(--clr-muted);
+      cursor: pointer; width: 100%; transition: all var(--transition);
+    }
+    .btn-add-stop:hover { border-color: var(--clr-primary); color: var(--clr-primary); background: #f7f9ff; }
+
+    /* ── SAVE BUTTON ── */
+    .btn-save-plan {
+      width: 100%; padding: 13px;
+      background: var(--clr-primary); color: #fff;
+      border: none; border-radius: var(--radius-md);
+      font-family: var(--font-body); font-size: .95rem; font-weight: 600;
+      cursor: pointer; transition: all var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-save-plan:hover { background: var(--clr-primary-dk); transform: translateY(-1px); }
+    .btn-save-plan:disabled { opacity: .6; transform: none; cursor: not-allowed; }
+
+    /* ── SIDEBAR – SAVED PLANS ── */
+    .sidebar-sticky { position: sticky; top: calc(var(--header-h) + 24px); }
+    .saved-list { display: flex; flex-direction: column; gap: 10px; }
+    .saved-plan-card {
+      background: var(--clr-bg); border: 1px solid var(--clr-border);
+      border-radius: var(--radius-md); padding: 14px 16px;
+      cursor: pointer; transition: all var(--transition);
+    }
+    .saved-plan-card:hover { border-color: var(--clr-primary); box-shadow: var(--shadow-sm); }
+    .saved-plan-card.active { border-color: var(--clr-primary); background: #f0f4ff; }
+    .saved-plan-name { font-weight: 600; font-size: .92rem; color: var(--clr-text); margin-bottom: 4px; }
+    .saved-plan-meta { font-size: .76rem; color: var(--clr-muted); }
+    .saved-plan-actions { display: flex; gap: 6px; margin-top: 8px; }
+    .btn-load { font-size: .75rem; color: var(--clr-primary); background: none; border: 1px solid var(--clr-primary); border-radius: var(--radius-sm); padding: 3px 10px; cursor: pointer; }
+    .btn-load:hover { background: var(--clr-primary); color: #fff; }
+    .btn-del-plan { font-size: .75rem; color: #c53030; background: none; border: 1px solid #fed7d7; border-radius: var(--radius-sm); padding: 3px 10px; cursor: pointer; }
+    .btn-del-plan:hover { background: #fff5f5; }
+
+    /* ── PREVIEW TIMELINE ── */
+    .preview-timeline { display: flex; flex-direction: column; gap: 0; }
+    .preview-stop {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding-bottom: 14px; position: relative;
+    }
+    .preview-stop:not(:last-child)::before {
+      content: ''; position: absolute;
+      left: 13px; top: 28px; bottom: 0; width: 2px;
+      background: var(--clr-border);
+    }
+    .preview-dot {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--clr-primary); color: #fff;
+      font-size: .72rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; z-index: 1;
+    }
+    .preview-content { flex: 1; }
+    .preview-name { font-weight: 600; font-size: .9rem; color: var(--clr-text); }
+    .preview-time { font-size: .76rem; color: var(--clr-muted); }
+    .preview-empty { text-align: center; padding: 28px 0; color: var(--clr-muted); font-size: .88rem; }
+
+    /* ── EMPTY STATES ── */
+    .empty-plans { text-align: center; padding: 32px 0; }
+    .empty-plans .icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .empty-plans p { color: var(--clr-muted); font-size: .88rem; }
+
+    /* ── LOGIN GATE ── */
+    .login-gate {
+      text-align: center; padding: 80px 24px;
+    }
+    .login-gate .icon { font-size: 3rem; margin-bottom: 14px; }
+    .login-gate h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--clr-text); margin-bottom: 10px; }
+    .login-gate p { color: var(--clr-muted); margin-bottom: 24px; max-width: 360px; margin-left: auto; margin-right: auto; }
+
+    /* ── FORM ALERT ── */
+    .plan-alert { padding: 10px 14px; border-radius: var(--radius-md); font-size: .85rem; margin-bottom: 14px; display: none; }
+    .plan-alert.show { display: flex; align-items: center; gap: 8px; }
+    .plan-alert.success { background: #f0fff4; border: 1px solid #9ae6b4; color: #276749; }
+    .plan-alert.error   { background: #fff5f5; border: 1px solid #fed7d7; color: #c53030; }
+
+    @media (max-width: 900px) {
+      .plan-grid { grid-template-columns: 1fr; }
+      .sidebar-sticky { position: static; }
+    }
+    @media (max-width: 600px) {
+      .detail-grid { grid-template-columns: 1fr; }
+      .stop-row { grid-template-columns: 1fr 100px 32px; }
+      .stop-row .stop-time { grid-column: 1 / -2; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="site-logo"><span class="logo-dot"></span>Visit<span class="logo-accent">Galle</span></a>
+    <nav class="site-nav" id="site-nav">
+      <a href="index.html">Home</a>
+      <a href="attractions.html">Attractions</a>
+      <a href="navigation.html">Getting Here</a>
+      <a href="itinerary.html">Itinerary</a>
+      <a href="feedback.html">Feedback</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="eyebrow" style="color:var(--clr-accent-lt);">Personal Planner</div>
+    <h1>My Custom <em>Itinerary</em></h1>
+    <p>Plan your perfect day in Galle. Pick attractions, set your times, and save multiple trip plans.</p>
+  </div>
+</section>
+
+<!-- LOGIN GATE -->
+<div id="login-gate" class="login-gate" style="display:none;">
+  <div class="icon">🗺️</div>
+  <h2>Sign in to plan your trip</h2>
+  <p>Create a free account to build and save custom itineraries for your Galle visit.</p>
+  <a href="login.html" class="btn btn-dark">Sign In / Register</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="plan-main" style="display:none;">
+  <div class="plan-wrap">
+    <div class="plan-grid">
+
+      <!-- LEFT: BUILDER -->
+      <div>
+        <!-- Trip Details -->
+        <div class="plan-card">
+          <div class="plan-card-head"><h3>📋 Trip Details</h3></div>
+          <div class="plan-card-body">
+            <div class="detail-grid">
+              <div class="field"><label>Plan Name *</label><input type="text" id="plan-name" placeholder="e.g. Weekend Galle Trip"></div>
+              <div class="field"><label>Visit Date</label><input type="date" id="plan-date"></div>
+              <div class="field"><label>Travel Mode</label>
+                <select id="plan-mode">
+                  <option value="train">🚂 Train</option>
+                  <option value="bus">🚌 Bus</option>
+                  <option value="tuk-tuk">🛺 Tuk-Tuk</option>
+                  <option value="car">🚗 Car / Taxi</option>
+                </select>
+              </div>
+              <div class="field"><label>Group Size</label>
+                <select id="plan-group">
+                  <option value="solo">Solo</option>
+                  <option value="couple">Couple</option>
+                  <option value="family">Family</option>
+                  <option value="group">Group (4+)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stops -->
+        <div class="plan-card">
+          <div class="plan-card-head">
+            <h3>📍 Your Stops</h3>
+            <span id="stop-count-label" style="font-size:.8rem;color:var(--clr-muted);">0 stops</span>
+          </div>
+          <div class="plan-card-body">
+            <div class="stop-list" id="stop-list"></div>
+            <button class="btn-add-stop" onclick="addStop()">+ Add a stop</button>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="plan-card">
+          <div class="plan-card-head"><h3>📝 Notes</h3></div>
+          <div class="plan-card-body">
+            <textarea id="plan-notes" style="width:100%;padding:10px 12px;border:1.5px solid var(--clr-border);border-radius:var(--radius-md);font-family:var(--font-body);font-size:.9rem;min-height:80px;resize:vertical;outline:none;background:var(--clr-bg);" placeholder="Any special notes, reminders, or things to pack…"></textarea>
+          </div>
+        </div>
+
+        <div class="plan-alert" id="plan-alert"></div>
+        <button class="btn-save-plan" id="btn-save-plan" onclick="savePlan()">
+          💾 Save Itinerary
+        </button>
+      </div>
+
+      <!-- RIGHT: SIDEBAR -->
+      <div class="sidebar-sticky">
+
+        <!-- Live Preview -->
+        <div class="plan-card">
+          <div class="plan-card-head"><h3>👁 Preview</h3></div>
+          <div class="plan-card-body">
+            <div class="preview-timeline" id="preview-timeline">
+              <div class="preview-empty">Add stops to preview your day →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Saved Plans -->
+        <div class="plan-card">
+          <div class="plan-card-head">
+            <h3>🗂 My Saved Plans</h3>
+            <button class="btn-cancel" style="font-size:.78rem;padding:5px 12px;" onclick="newPlan()">+ New</button>
+          </div>
+          <div class="plan-card-body" style="padding:16px;">
+            <div id="saved-plans-list">
+              <div class="empty-plans"><div class="icon">📭</div><p>No saved plans yet.</p></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="shared.js"></script>
+<script>
+  let attractions = [];
+  let stops = [];
+  let editingPlanId = null;
+
+  function authHeaders() {
+    return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authGetToken() };
+  }
+
+  // ── GUARD ──────────────────────────────────────────────────
+  function guardUser() {
+    const user = authGetUser();
+    if (!user) {
+      document.getElementById('login-gate').style.display = 'block';
+      return false;
+    }
+    document.getElementById('plan-main').style.display = 'block';
+    return true;
+  }
+
+  // ── LOAD ATTRACTIONS FOR DROPDOWNS ─────────────────────────
+  async function loadAttractions() {
+    try {
+      const res  = await fetch(`${API}/attractions`);
+      const data = await res.json();
+      attractions = data.success ? data.data : [];
+    } catch {
+      // fallback: hardcoded list so page still works
+      attractions = [
+        { id:1, name:'Galle Dutch Fort', category:'historical' },
+        { id:2, name:'Unawatuna Beach', category:'beach' },
+        { id:3, name:'Galle Lighthouse', category:'historical' },
+        { id:4, name:'Dutch Reformed Church', category:'historical' },
+        { id:5, name:'Kanneliya Rainforest', category:'nature' },
+        { id:6, name:'Kosgoda Turtle Hatchery', category:'beach' },
+        { id:7, name:'Mirissa Whale Watching', category:'nature' },
+        { id:8, name:'Sri Sudharmalaya Temple', category:'religious' },
+        { id:9, name:'Meeran Jumma Mosque', category:'religious' },
+        { id:10,'name':'Midigama Surf Beach', category:'beach' },
+        { id:11, name:'Rumassala Nature Reserve', category:'nature' },
+      ];
+    }
+  }
+
+  function attractionOptions(selectedId) {
+    const groups = { historical:'🏰 Historical', beach:'🏖️ Beach', nature:'🌿 Nature', religious:'🛕 Religious', dining:'🍛 Dining' };
+    let html = '<option value="">Select attraction…</option>';
+    for (const [cat, label] of Object.entries(groups)) {
+      const group = attractions.filter(a => a.category === cat);
+      if (!group.length) continue;
+      html += `<optgroup label="${label}">`;
+      group.forEach(a => {
+        html += `<option value="${a.id}" ${a.id == selectedId ? 'selected' : ''}>${a.name}</option>`;
+      });
+      html += '</optgroup>';
+    }
+    return html;
+  }
+
+  // ── STOPS ──────────────────────────────────────────────────
+  function addStop(attrId = '', time = '') {
+    stops.push({ attrId, time });
+    renderStops();
+  }
+
+  function removeStop(i) {
+    stops.splice(i, 1);
+    renderStops();
+  }
+
+  function renderStops() {
+    const list = document.getElementById('stop-list');
+    document.getElementById('stop-count-label').textContent = stops.length + ' stop' + (stops.length !== 1 ? 's' : '');
+
+    if (!stops.length) {
+      list.innerHTML = '';
+      updatePreview();
+      return;
+    }
+
+    list.innerHTML = stops.map((s, i) => `
+      <div class="stop-row" id="stop-${i}">
+        <div class="stop-num">
+          <div class="stop-num-badge">${i + 1}</div>
+          <select onchange="updateStop(${i},'attrId',this.value)" style="flex:1;">
+            ${attractionOptions(s.attrId)}
+          </select>
+        </div>
+        <input type="time" class="stop-time" value="${s.time}" onchange="updateStop(${i},'time',this.value)" title="Arrival time">
+        <select onchange="updateStop(${i},'duration',this.value)" title="Duration">
+          <option value="">Time</option>
+          <option value="30" ${s.duration=='30'?'selected':''}>30 min</option>
+          <option value="60" ${s.duration=='60'?'selected':''}>1 hr</option>
+          <option value="90" ${s.duration=='90'?'selected':''}>1.5 hr</option>
+          <option value="120" ${s.duration=='120'?'selected':''}>2 hrs</option>
+          <option value="180" ${s.duration=='180'?'selected':''}>3 hrs</option>
+        </select>
+        <button class="btn-remove-stop" onclick="removeStop(${i})" title="Remove">×</button>
+      </div>`).join('');
+
+    updatePreview();
+  }
+
+  function updateStop(i, key, val) {
+    stops[i][key] = val;
+    updatePreview();
+  }
+
+  // ── PREVIEW ────────────────────────────────────────────────
+  function updatePreview() {
+    const tl = document.getElementById('preview-timeline');
+    const validStops = stops.filter(s => s.attrId);
+    if (!validStops.length) {
+      tl.innerHTML = '<div class="preview-empty">Add stops to preview your day →</div>';
+      return;
+    }
+    tl.innerHTML = validStops.map((s, i) => {
+      const attr = attractions.find(a => a.id == s.attrId);
+      const name = attr ? attr.name : 'Unknown attraction';
+      const dur  = s.duration ? ` · ${s.duration >= 60 ? Math.floor(s.duration/60)+'h'+(s.duration%60?s.duration%60+'m':'') : s.duration+'min'}` : '';
+      return `<div class="preview-stop">
+        <div class="preview-dot">${i + 1}</div>
+        <div class="preview-content">
+          <div class="preview-name">${name}</div>
+          <div class="preview-time">${s.time || 'No time set'}${dur}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── SAVE PLAN ──────────────────────────────────────────────
+  async function savePlan() {
+    const alertEl = document.getElementById('plan-alert');
+    alertEl.className = 'plan-alert';
+
+    const name  = document.getElementById('plan-name').value.trim();
+    const date  = document.getElementById('plan-date').value;
+    const mode  = document.getElementById('plan-mode').value;
+    const group = document.getElementById('plan-group').value;
+    const notes = document.getElementById('plan-notes').value.trim();
+
+    if (!name) {
+      alertEl.textContent = '⚠ Please give your plan a name.';
+      alertEl.className = 'plan-alert error show';
+      return;
+    }
+    const validStops = stops.filter(s => s.attrId);
+    if (!validStops.length) {
+      alertEl.textContent = '⚠ Add at least one attraction stop.';
+      alertEl.className = 'plan-alert error show';
+      return;
+    }
+
+    const payload = { name, visit_date: date || null, travel_mode: mode, group_size: group, notes, stops: validStops };
+    const btn = document.getElementById('btn-save-plan');
+    btn.disabled = true; btn.textContent = 'Saving…';
+
+    try {
+      const url    = editingPlanId ? `${API}/itineraries/${editingPlanId}` : `${API}/itineraries`;
+      const method = editingPlanId ? 'PUT' : 'POST';
+      const res    = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(payload) });
+      const data   = await res.json();
+
+      if (data.success) {
+        showToast(editingPlanId ? '✅ Plan updated!' : '✅ Plan saved!');
+        alertEl.textContent = editingPlanId ? '✅ Plan updated successfully.' : '✅ Plan saved successfully!';
+        alertEl.className = 'plan-alert success show';
+        editingPlanId = data.id || editingPlanId;
+        loadSavedPlans();
+      } else {
+        alertEl.textContent = '⚠ ' + (data.error || 'Could not save.');
+        alertEl.className = 'plan-alert error show';
+      }
+    } catch {
+      alertEl.textContent = '⚠ Network error. Please try again.';
+      alertEl.className = 'plan-alert error show';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '💾 Save Itinerary';
+    }
+  }
+
+  // ── LOAD SAVED PLANS ───────────────────────────────────────
+  async function loadSavedPlans() {
+    try {
+      const res  = await fetch(`${API}/itineraries`, { headers: authHeaders() });
+      const data = await res.json();
+      if (!data.success) throw new Error();
+      renderSavedPlans(data.data);
+    } catch {
+      document.getElementById('saved-plans-list').innerHTML =
+        '<div class="empty-plans"><div class="icon">⚠️</div><p>Could not load plans.</p></div>';
+    }
+  }
+
+  function renderSavedPlans(plans) {
+    const el = document.getElementById('saved-plans-list');
+    if (!plans.length) {
+      el.innerHTML = '<div class="empty-plans"><div class="icon">📭</div><p>No saved plans yet.</p></div>';
+      return;
+    }
+    el.innerHTML = plans.map(p => {
+      const d = p.visit_date ? new Date(p.visit_date).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : 'No date';
+      const stops = p.stops ? (typeof p.stops === 'string' ? JSON.parse(p.stops) : p.stops) : [];
+      return `<div class="saved-plan-card ${editingPlanId == p.id ? 'active' : ''}">
+        <div class="saved-plan-name">${p.name}</div>
+        <div class="saved-plan-meta">📅 ${d} · ${stops.length} stop${stops.length!==1?'s':''} · ${p.travel_mode||'–'}</div>
+        <div class="saved-plan-actions">
+          <button class="btn-load" onclick="loadPlan(${p.id})">✏️ Edit</button>
+          <button class="btn-del-plan" onclick="deletePlan(${p.id})">🗑 Delete</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function loadPlan(id) {
+    try {
+      const res  = await fetch(`${API}/itineraries/${id}`, { headers: authHeaders() });
+      const data = await res.json();
+      if (!data.success) throw new Error();
+      const p = data.data;
+      editingPlanId = p.id;
+      document.getElementById('plan-name').value  = p.name || '';
+      document.getElementById('plan-date').value  = p.visit_date ? p.visit_date.substring(0,10) : '';
+      document.getElementById('plan-mode').value  = p.travel_mode || 'train';
+      document.getElementById('plan-group').value = p.group_size || 'solo';
+      document.getElementById('plan-notes').value = p.notes || '';
+      stops = (typeof p.stops === 'string' ? JSON.parse(p.stops) : p.stops) || [];
+      renderStops();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast('Plan loaded — make your changes and save.');
+      loadSavedPlans(); // refresh active state
+    } catch { showToast('Could not load plan.'); }
+  }
+
+  async function deletePlan(id) {
+    if (!confirm('Delete this plan? This cannot be undone.')) return;
+    try {
+      const res  = await fetch(`${API}/itineraries/${id}`, { method: 'DELETE', headers: authHeaders() });
+      const data = await res.json();
+      if (data.success) {
+        if (editingPlanId === id) newPlan();
+        showToast('🗑 Plan deleted.');
+        loadSavedPlans();
+      } else { showToast('Error deleting plan.'); }
+    } catch { showToast('Network error.'); }
+  }
+
+  function newPlan() {
+    editingPlanId = null;
+    stops = [];
+    document.getElementById('plan-name').value  = '';
+    document.getElementById('plan-date').value  = '';
+    document.getElementById('plan-notes').value = '';
+    document.getElementById('plan-mode').value  = 'train';
+    document.getElementById('plan-group').value = 'solo';
+    document.getElementById('plan-alert').className = 'plan-alert';
+    renderStops();
+    loadSavedPlans();
+  }
+
+  // ── INIT ───────────────────────────────────────────────────
+  (async () => {
+    if (!guardUser()) return;
+    await loadAttractions();
+    renderStops();
+    loadSavedPlans();
+    // Default visit date to today
+    document.getElementById('plan-date').value = new Date().toISOString().split('T')[0];
+  })();
+</script>
+</body>
+</html>

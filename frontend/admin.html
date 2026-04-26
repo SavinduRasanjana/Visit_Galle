@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Visit Galle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #f0f2f5; }
+
+    /* ── ADMIN HEADER ── */
+    .admin-topbar {
+      background: var(--clr-primary-dk);
+      padding: 0 28px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    }
+    .admin-brand { display: flex; align-items: center; gap: 10px; color: var(--clr-white); font-weight: 700; font-size: .95rem; }
+    .admin-badge { background: var(--clr-accent); color: #fff; font-size: .65rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .admin-user { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,.7); font-size: .85rem; }
+    .admin-user a { color: var(--clr-accent-lt); font-weight: 600; }
+    .admin-user a:hover { text-decoration: underline; }
+
+    /* ── LAYOUT ── */
+    .admin-wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+    .admin-page-title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--clr-text); margin-bottom: 4px; }
+    .admin-page-sub { color: var(--clr-muted); font-size: .9rem; margin-bottom: 32px; }
+
+    /* ── STATS ROW ── */
+    .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .astat {
+      background: var(--clr-white); border-radius: var(--radius-lg);
+      padding: 20px 22px; border: 1px solid var(--clr-border);
+      box-shadow: var(--shadow-sm);
+    }
+    .astat-val { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--clr-primary); }
+    .astat-label { font-size: .78rem; color: var(--clr-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+    /* ── CARD PANEL ── */
+    .admin-card {
+      background: var(--clr-white); border-radius: var(--radius-lg);
+      border: 1px solid var(--clr-border); box-shadow: var(--shadow-sm);
+      overflow: hidden; margin-bottom: 28px;
+    }
+    .admin-card-head {
+      padding: 18px 24px; border-bottom: 1px solid var(--clr-border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .admin-card-head h2 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--clr-text); }
+    .admin-card-body { padding: 24px; }
+
+    /* ── ADD FORM ── */
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .field { margin-bottom: 0; }
+    .field label { display: block; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--clr-text); margin-bottom: 6px; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 10px 13px;
+      border: 1.5px solid var(--clr-border); border-radius: var(--radius-md);
+      font-family: var(--font-body); font-size: .9rem; color: var(--clr-text);
+      background: var(--clr-bg); outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: var(--clr-primary); box-shadow: 0 0 0 3px rgba(27,54,93,.08); background: #fff;
+    }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field-row { display: flex; gap: 8px; align-items: center; }
+    .star-select { display: flex; gap: 4px; }
+    .star-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #ddd; transition: color .15s; }
+    .star-btn.on { color: #f6ad55; }
+
+    .form-actions { display: flex; gap: 10px; align-items: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--clr-border); }
+    .btn-save { background: var(--clr-primary); color: #fff; border: none; border-radius: var(--radius-md); padding: 10px 24px; font-family: var(--font-body); font-size: .9rem; font-weight: 600; cursor: pointer; transition: all var(--transition); }
+    .btn-save:hover { background: var(--clr-primary-dk); transform: translateY(-1px); }
+    .btn-cancel { background: none; border: 1.5px solid var(--clr-border); border-radius: var(--radius-md); padding: 10px 20px; font-family: var(--font-body); font-size: .9rem; color: var(--clr-muted); cursor: pointer; transition: all var(--transition); }
+    .btn-cancel:hover { border-color: var(--clr-text); color: var(--clr-text); }
+
+    /* ── ATTRACTION TABLE ── */
+    .attr-table { width: 100%; border-collapse: collapse; }
+    .attr-table th {
+      text-align: left; font-size: .72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--clr-muted);
+      padding: 10px 14px; border-bottom: 2px solid var(--clr-border);
+      background: var(--clr-bg);
+    }
+    .attr-table td { padding: 13px 14px; border-bottom: 1px solid var(--clr-border); font-size: .9rem; vertical-align: middle; }
+    .attr-table tr:last-child td { border-bottom: none; }
+    .attr-table tr:hover td { background: #fafbfc; }
+    .attr-name { font-weight: 600; color: var(--clr-text); }
+    .attr-cat { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+    .cat-historical { background: #ebf4ff; color: #2b6cb0; }
+    .cat-beach      { background: #e6fffa; color: #276749; }
+    .cat-nature     { background: #f0fff4; color: #22543d; }
+    .cat-religious  { background: #faf5ff; color: #553c9a; }
+    .cat-dining     { background: #fffaf0; color: #7b341e; }
+    .attr-rating { color: #f6ad55; font-weight: 700; font-size: .88rem; }
+    .row-actions { display: flex; gap: 6px; }
+    .btn-edit, .btn-del {
+      border: none; border-radius: var(--radius-sm); padding: 5px 12px;
+      font-family: var(--font-body); font-size: .78rem; font-weight: 600; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-edit { background: #ebf4ff; color: #2b6cb0; }
+    .btn-edit:hover { background: #bee3f8; }
+    .btn-del  { background: #fff5f5; color: #c53030; }
+    .btn-del:hover  { background: #fed7d7; }
+
+    /* ── EMPTY / LOADING ── */
+    .table-empty { text-align: center; padding: 48px 24px; color: var(--clr-muted); }
+    .table-empty .empty-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .loading-row td { text-align: center; padding: 32px; color: var(--clr-muted); }
+
+    /* ── FORM STATUS ── */
+    .form-alert { padding: 10px 14px; border-radius: var(--radius-md); font-size: .85rem; margin-bottom: 16px; display: none; }
+    .form-alert.show { display: flex; align-items: center; gap: 8px; }
+    .form-alert.success { background: #f0fff4; border: 1px solid #9ae6b4; color: #276749; }
+    .form-alert.error   { background: #fff5f5; border: 1px solid #fed7d7; color: #c53030; }
+
+    /* ── ACCESS DENIED ── */
+    .access-denied { text-align: center; padding: 100px 24px; }
+    .access-denied .icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .access-denied h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--clr-text); margin-bottom: 10px; }
+    .access-denied p { color: var(--clr-muted); margin-bottom: 24px; }
+
+    /* ── CONFIRM MODAL ── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 300; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: #fff; border-radius: var(--radius-lg); padding: 32px; max-width: 380px; width: 90%; }
+    .modal-box h3 { font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 10px; }
+    .modal-box p { color: var(--clr-muted); font-size: .9rem; margin-bottom: 22px; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+    @media (max-width: 768px) {
+      .admin-stats { grid-template-columns: 1fr 1fr; }
+      .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+      .admin-topbar { padding: 0 16px; }
+    }
+    @media (max-width: 480px) {
+      .admin-stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="admin-topbar">
+  <div class="admin-brand">
+    <span class="logo-dot" style="width:8px;height:8px;border-radius:50%;background:var(--clr-accent);display:inline-block;"></span>
+    VisitGalle <span class="admin-badge">Admin</span>
+  </div>
+  <div class="admin-user">
+    <span id="admin-name-display">Loading…</span>
+    <a href="index.html">← Back to site</a>
+    <a href="#" onclick="authLogout(); return false;">Sign Out</a>
+  </div>
+</div>
+
+<!-- ACCESS DENIED (shown if not admin) -->
+<div id="access-denied" class="access-denied" style="display:none;">
+  <div class="icon">🔒</div>
+  <h2>Admin Access Only</h2>
+  <p>You need an admin account to view this page.</p>
+  <a href="login.html" class="btn btn-dark">Sign In</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="admin-main" style="display:none;">
+  <div class="admin-wrap">
+    <div class="admin-page-title">Attractions Manager</div>
+    <div class="admin-page-sub">Add, edit, or remove attractions shown across the Visit Galle site.</div>
+
+    <!-- STATS -->
+    <div class="admin-stats">
+      <div class="astat"><div class="astat-val" id="stat-total">–</div><div class="astat-label">Total Attractions</div></div>
+      <div class="astat"><div class="astat-val" id="stat-historical">–</div><div class="astat-label">Historical</div></div>
+      <div class="astat"><div class="astat-val" id="stat-beaches">–</div><div class="astat-label">Beaches</div></div>
+      <div class="astat"><div class="astat-val" id="stat-nature">–</div><div class="astat-label">Nature & Other</div></div>
+    </div>
+
+    <!-- ADD / EDIT FORM -->
+    <div class="admin-card">
+      <div class="admin-card-head">
+        <h2 id="form-title">➕ Add New Attraction</h2>
+        <button class="btn-cancel" id="form-toggle-btn" onclick="toggleForm()" style="display:none;">Cancel</button>
+      </div>
+      <div class="admin-card-body" id="form-body" style="display:none;">
+
+        <div class="form-alert" id="form-alert"></div>
+
+        <input type="hidden" id="edit-id">
+        <div class="form-grid-2" style="margin-bottom:16px;">
+          <div class="field"><label>Attraction Name *</label><input type="text" id="f-name" placeholder="e.g. Galle Dutch Fort"></div>
+          <div class="field">
+            <label>Category *</label>
+            <select id="f-cat">
+              <option value="">Select category…</option>
+              <option value="historical">🏰 Historical</option>
+              <option value="beach">🏖️ Beach</option>
+              <option value="nature">🌿 Nature</option>
+              <option value="religious">🛕 Religious</option>
+              <option value="dining">🍛 Dining</option>
+            </select>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:16px;"><label>Description *</label><textarea id="f-desc" placeholder="Brief description of the attraction (2–3 sentences)…"></textarea></div>
+        <div class="form-grid-3" style="margin-bottom:16px;">
+          <div class="field"><label>Distance from Galle (km)</label><input type="number" id="f-dist" placeholder="0" min="0" max="100" step="0.1"></div>
+          <div class="field">
+            <label>Rating (1–5)</label>
+            <div class="star-select" id="star-select">
+              <button class="star-btn" data-v="1" onclick="setRating(1)">★</button>
+              <button class="star-btn" data-v="2" onclick="setRating(2)">★</button>
+              <button class="star-btn" data-v="3" onclick="setRating(3)">★</button>
+              <button class="star-btn" data-v="4" onclick="setRating(4)">★</button>
+              <button class="star-btn" data-v="5" onclick="setRating(5)">★</button>
+            </div>
+            <input type="hidden" id="f-rating" value="0">
+          </div>
+          <div class="field"><label>Icon / Emoji</label><input type="text" id="f-icon" placeholder="🏰" maxlength="4"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-save" onclick="saveAttraction()">
+            <span id="save-btn-text">Save Attraction</span>
+          </button>
+          <button class="btn-cancel" onclick="cancelEdit()">Cancel</button>
+          <span id="form-saving" style="color:var(--clr-muted);font-size:.85rem;display:none;">Saving…</span>
+        </div>
+      </div>
+
+      <!-- Add button when form hidden -->
+      <div id="form-show-btn" class="admin-card-body">
+        <button class="btn btn-dark" onclick="showAddForm()">+ Add New Attraction</button>
+      </div>
+    </div>
+
+    <!-- ATTRACTIONS TABLE -->
+    <div class="admin-card">
+      <div class="admin-card-head">
+        <h2>All Attractions</h2>
+        <input type="text" id="search-input" placeholder="Search…" style="border:1.5px solid var(--clr-border);border-radius:var(--radius-md);padding:7px 12px;font-family:var(--font-body);font-size:.85rem;outline:none;" oninput="filterTable(this.value)">
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="attr-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Distance</th>
+              <th>Rating</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="attractions-tbody">
+            <tr class="loading-row"><td colspan="6">Loading attractions…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="del-modal">
+  <div class="modal-box">
+    <h3>Delete Attraction?</h3>
+    <p id="del-modal-msg">This will permanently remove the attraction from the database.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeDelModal()">Cancel</button>
+      <button class="btn-del" style="padding:8px 18px;font-size:.88rem;" onclick="confirmDelete()">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="shared.js"></script>
+<script>
+  let allAttractions = [];
+  let deleteTargetId = null;
+  let currentRating = 0;
+
+  // ── AUTH GUARD ─────────────────────────────────────────────
+  async function guardAdmin() {
+    const token = authGetToken();
+    const user  = authGetUser();
+    if (!token || !user) {
+      document.getElementById('access-denied').style.display = 'block';
+      return false;
+    }
+    if (user.role !== 'admin') {
+      document.getElementById('access-denied').style.display = 'block';
+      return false;
+    }
+    document.getElementById('admin-name-display').textContent = user.name;
+    document.getElementById('admin-main').style.display = 'block';
+    return true;
+  }
+
+  // ── LOAD ATTRACTIONS ───────────────────────────────────────
+  async function loadAttractions() {
+    try {
+      const res  = await fetch(`${API}/attractions`, { headers: authHeaders() });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      allAttractions = data.data;
+      renderTable(allAttractions);
+      updateStats(allAttractions);
+    } catch (e) {
+      document.getElementById('attractions-tbody').innerHTML =
+        `<tr><td colspan="6" style="text-align:center;color:#c53030;padding:24px;">Failed to load attractions: ${e.message}</td></tr>`;
+    }
+  }
+
+  function authHeaders() {
+    return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authGetToken() };
+  }
+
+  function updateStats(list) {
+    document.getElementById('stat-total').textContent      = list.length;
+    document.getElementById('stat-historical').textContent = list.filter(a => a.category === 'historical').length;
+    document.getElementById('stat-beaches').textContent    = list.filter(a => a.category === 'beach').length;
+    document.getElementById('stat-nature').textContent     = list.filter(a => ['nature','religious','dining'].includes(a.category)).length;
+  }
+
+  const CAT_LABELS = { historical:'Historical', beach:'Beach', nature:'Nature', religious:'Religious', dining:'Dining' };
+
+  function renderTable(list) {
+    const tbody = document.getElementById('attractions-tbody');
+    if (!list.length) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="table-empty"><div class="empty-icon">🏖️</div><p>No attractions yet. Add one above!</p></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = list.map((a, i) => `
+      <tr data-id="${a.id}">
+        <td style="color:var(--clr-muted);font-size:.82rem;">${i + 1}</td>
+        <td><span class="attr-name">${esc(a.name)}</span><br><span style="font-size:.78rem;color:var(--clr-muted);">${esc(a.icon || '')} ${esc(a.description || '').substring(0,55)}…</span></td>
+        <td><span class="attr-cat cat-${a.category}">${CAT_LABELS[a.category] || a.category}</span></td>
+        <td style="color:var(--clr-muted);">${a.distance_km != null ? a.distance_km + ' km' : '–'}</td>
+        <td class="attr-rating">${'★'.repeat(Math.round(a.rating || 0))}${'☆'.repeat(5 - Math.round(a.rating || 0))} <span style="color:var(--clr-text);font-weight:400;">${a.rating || '–'}</span></td>
+        <td>
+          <div class="row-actions">
+            <button class="btn-edit" onclick="editAttraction(${a.id})">Edit</button>
+            <button class="btn-del"  onclick="openDelModal(${a.id}, '${esc(a.name)}')">Delete</button>
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+
+  function filterTable(q) {
+    const filtered = q
+      ? allAttractions.filter(a => a.name.toLowerCase().includes(q.toLowerCase()) || (a.category || '').includes(q.toLowerCase()))
+      : allAttractions;
+    renderTable(filtered);
+  }
+
+  function esc(str) { return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // ── FORM ──────────────────────────────────────────────────
+  function showAddForm() {
+    document.getElementById('form-body').style.display = 'block';
+    document.getElementById('form-show-btn').style.display = 'none';
+    document.getElementById('form-title').textContent = '➕ Add New Attraction';
+    document.getElementById('save-btn-text').textContent = 'Save Attraction';
+    document.getElementById('edit-id').value = '';
+    resetForm();
+  }
+
+  function cancelEdit() {
+    document.getElementById('form-body').style.display = 'none';
+    document.getElementById('form-show-btn').style.display = 'block';
+    document.getElementById('form-alert').className = 'form-alert';
+    resetForm();
+  }
+
+  function resetForm() {
+    ['f-name','f-desc','f-dist','f-icon'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-cat').value = '';
+    setRating(0);
+    document.getElementById('edit-id').value = '';
+  }
+
+  function setRating(val) {
+    currentRating = val;
+    document.getElementById('f-rating').value = val;
+    document.querySelectorAll('.star-btn').forEach(b => {
+      b.classList.toggle('on', parseInt(b.dataset.v) <= val);
+    });
+  }
+
+  function editAttraction(id) {
+    const a = allAttractions.find(x => x.id === id);
+    if (!a) return;
+    showAddForm();
+    document.getElementById('edit-id').value = a.id;
+    document.getElementById('f-name').value  = a.name || '';
+    document.getElementById('f-desc').value  = a.description || '';
+    document.getElementById('f-cat').value   = a.category || '';
+    document.getElementById('f-dist').value  = a.distance_km != null ? a.distance_km : '';
+    document.getElementById('f-icon').value  = a.icon || '';
+    setRating(Math.round(a.rating || 0));
+    document.getElementById('form-title').textContent = '✏️ Edit Attraction';
+    document.getElementById('save-btn-text').textContent = 'Update Attraction';
+    document.getElementById('form-body').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function saveAttraction() {
+    const alertEl = document.getElementById('form-alert');
+    alertEl.className = 'form-alert';
+
+    const name    = document.getElementById('f-name').value.trim();
+    const desc    = document.getElementById('f-desc').value.trim();
+    const cat     = document.getElementById('f-cat').value;
+    const dist    = document.getElementById('f-dist').value;
+    const icon    = document.getElementById('f-icon').value.trim();
+    const rating  = parseFloat(document.getElementById('f-rating').value) || 0;
+    const editId  = document.getElementById('edit-id').value;
+
+    if (!name || !desc || !cat) {
+      alertEl.textContent = '⚠ Name, description and category are required.';
+      alertEl.className = 'form-alert error show';
+      return;
+    }
+
+    const payload = { name, description: desc, category: cat, icon,
+      distance_km: dist !== '' ? parseFloat(dist) : null, rating };
+
+    document.getElementById('form-saving').style.display = 'inline';
+    document.getElementById('save-btn-text').parentElement.disabled = true;
+
+    try {
+      const url    = editId ? `${API}/attractions/${editId}` : `${API}/attractions`;
+      const method = editId ? 'PUT' : 'POST';
+      const res    = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(payload) });
+      const data   = await res.json();
+
+      if (data.success) {
+        showToast(editId ? '✅ Attraction updated!' : '✅ Attraction added!');
+        cancelEdit();
+        loadAttractions();
+      } else {
+        alertEl.textContent = '⚠ ' + (data.error || 'Save failed.');
+        alertEl.className = 'form-alert error show';
+      }
+    } catch (e) {
+      alertEl.textContent = '⚠ Network error. Please try again.';
+      alertEl.className = 'form-alert error show';
+    } finally {
+      document.getElementById('form-saving').style.display = 'none';
+      document.getElementById('save-btn-text').parentElement.disabled = false;
+    }
+  }
+
+  // ── DELETE ─────────────────────────────────────────────────
+  function openDelModal(id, name) {
+    deleteTargetId = id;
+    document.getElementById('del-modal-msg').textContent = `This will permanently delete "${name}" from the database.`;
+    document.getElementById('del-modal').classList.add('open');
+  }
+  function closeDelModal() {
+    deleteTargetId = null;
+    document.getElementById('del-modal').classList.remove('open');
+  }
+  async function confirmDelete() {
+    if (!deleteTargetId) return;
+    try {
+      const res  = await fetch(`${API}/attractions/${deleteTargetId}`, { method: 'DELETE', headers: authHeaders() });
+      const data = await res.json();
+      if (data.success) {
+        showToast('🗑 Attraction deleted.');
+        closeDelModal();
+        loadAttractions();
+      } else { showToast('Error: ' + data.error); }
+    } catch { showToast('Network error.'); }
+  }
+
+  // ── INIT ───────────────────────────────────────────────────
+  (async () => {
+    const ok = await guardAdmin();
+    if (ok) loadAttractions();
+  })();
+</script>
+</body>
+</html>
