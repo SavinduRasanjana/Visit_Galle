@@ -29,7 +29,7 @@ app.use(cors({
 // Rate limiting — REQ-NF-06: prevent abuse
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 30,
+  max: 1000,
   message: { success: false, error: 'Too many requests. Please try again later.' }
 });
 app.use('/api/', limiter);
