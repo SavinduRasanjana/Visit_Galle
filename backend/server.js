@@ -223,11 +223,6 @@ app.get('/api/feedback/stats', async (req, res) => {
   }
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ success: false, error: 'Route not found.' });
-});
-
 // ── START ───────────────────────────────────────────────────
 initDB()
   .then(() => {
@@ -623,4 +618,9 @@ app.get('/api/my-reviews', requireAuth, async (req, res) => {
   } catch (err) {
     return res.status(500).json({ success: false, error: 'Server error.' });
   }
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ success: false, error: 'Route not found.' });
 });
