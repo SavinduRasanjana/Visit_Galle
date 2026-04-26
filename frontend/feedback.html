@@ -280,16 +280,20 @@
 
     try {
       // Add the timestamp to the query parameters
-      const res = await fetch(`${API}/feedback?page=${reviewPage}&limit=4&_t=${new Date().getTime()}`);
+      const res = await fetch(`${API}/feedback?page=${reviewPage}&limit=4&_t=${Date.now()}`, {
+        cache: "no-store"
+      });
       const data = await res.json();
 
-      if (!data.success || !data.data.length) {
-        if (!append) {
-          container.innerHTML = renderSeedReviews(); // fallback seed reviews
-        }
-        loadBtn.style.display = 'none';
-        return;
+      if (!data.success) {
+       container.innerHTML = '<div class="reviews-loading">Error loading reviews</div>';
+      return;
       }
+
+      if (!data.data || data.data.length === 0) {
+       container.innerHTML = '<div class="reviews-loading">No reviews yet</div>';
+      return;
+}
 
       totalPages = data.pagination.pages;
       if (!append) container.innerHTML = '';
@@ -421,8 +425,10 @@
   }
 
   // ── INIT ────────────────────────────────────────────────────
-  loadStats();
+  setTimeout(() => {
   loadReviews();
+  loadStats();
+}, 500);
 </script>
 </body>
 </html>
